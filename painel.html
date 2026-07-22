@@ -121,7 +121,7 @@ margin-left:0;
 <div class="cards">
 
 <div class="card">
-<h3>0</h3>
+<h3 id="totalUsuarios">0</h3>
 <p>Usuários</p>
 </div>
 
@@ -152,6 +152,11 @@ function sair(){
 window.location="admin.html";
 
 }
+
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+document.getElementById("totalUsuarios").innerHTML = usuarios.length;
 
 function usuarios(){
 
