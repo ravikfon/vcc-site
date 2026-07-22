@@ -1,0 +1,1 @@
+console.log("VCC carregado com sucesso!");
