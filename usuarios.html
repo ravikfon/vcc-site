@@ -117,6 +117,18 @@ mostrar();
 }
 
 
+
+
+function excluirUsuario(index){
+
+usuarios.splice(index, 1);
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+mostrar();
+
+}
+
 function editarUsuario(index){
 
 let usuario = usuarios[index];
@@ -134,17 +146,6 @@ localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
 
 }
-
-function excluirUsuario(index){
-
-usuarios.splice(index, 1);
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-mostrar();
-
-}
-
 
 
 
