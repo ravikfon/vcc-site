@@ -108,8 +108,17 @@ let lista = document.getElementById("lista");
 
 lista.innerHTML="";
 
+function excluir(index){
 
-usuarios.forEach((u)=>{
+usuarios.splice(index,1);
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+mostrar();
+
+}
+
+usuarios.forEach((u,index)=>{
 
 lista.innerHTML += `
 
@@ -119,7 +128,11 @@ lista.innerHTML += `
 
 ${u.email}<br>
 
-${u.telefone}
+${u.telefone}<br><br>
+
+<button onclick="excluir(${index})">
+Excluir
+</button>
 
 </div>
 
