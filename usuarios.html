@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
 <meta charset="UTF-8">
@@ -44,9 +45,14 @@ margin-top:10px;
 border-radius:5px;
 }
 
+.excluir{
+background:#ff0000;
+}
+
 </style>
 
 </head>
+
 
 <body>
 
@@ -60,18 +66,23 @@ border-radius:5px;
 
 <input id="telefone" placeholder="Telefone">
 
+
 <button onclick="salvar()">Salvar</button>
+
 
 <h3>Usuários cadastrados:</h3>
 
 <div id="lista"></div>
+
 
 </div>
 
 
 <script>
 
+
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
 
 
 function salvar(){
@@ -96,29 +107,44 @@ usuarios.push(usuario);
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
 
+document.getElementById("nome").value="";
+document.getElementById("email").value="";
+document.getElementById("telefone").value="";
+
+
 mostrar();
 
+}
+
+
+
+
+function excluir(index){
+
+usuarios.splice(index,1);
+
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+
+mostrar();
 
 }
+
+
 
 
 function mostrar(){
 
 let lista = document.getElementById("lista");
 
+
 lista.innerHTML="";
 
-function excluir(index){
 
-usuarios.splice(index,1);
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-mostrar();
-
-}
 
 usuarios.forEach((u,index)=>{
+
 
 lista.innerHTML += `
 
@@ -130,24 +156,33 @@ ${u.email}<br>
 
 ${u.telefone}<br><br>
 
-<button onclick="excluir(${index})">
+
+<button class="excluir" onclick="excluir(${index})">
+
 Excluir
+
 </button>
+
 
 </div>
 
 `;
 
+
 });
+
 
 }
 
 
+
 mostrar();
+
 
 
 </script>
 
 
 </body>
+
 </html>
