@@ -96,6 +96,10 @@ margin-left:0;
 
 <button onclick="abrirUsuarios()">Usuários</button>
 
+<button onclick="abrirEquipes()">Equipes</button>
+
+<button>Configurações</button>
+
 <button>Configurações</button>
 
 <button onclick="sair()">Sair</button>
@@ -153,6 +157,11 @@ window.location="usuarios.html";
 
 }
 
+function abrirEquipes(){
+
+window.location="equipes.html";
+
+}
 
 let listaUsuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
