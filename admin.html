@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área Administrativa</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+}
+
+.container{
+    margin:50px auto;
+    width:90%;
+    max-width:400px;
+    background:#222;
+    padding:20px;
+    border-radius:10px;
+}
+
+input,button{
+    width:90%;
+    padding:12px;
+    margin:8px;
+    border-radius:5px;
+    border:none;
+}
+
+button{
+    background:#0066ff;
+    color:white;
+    cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Login Admin</h2>
+
+<input id="usuario" placeholder="Usuário">
+
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="entrar()">Entrar</button>
+
+<p id="msg"></p>
+
+</div>
+
+
+<script>
+
+function entrar(){
+
+let usuario = document.getElementById("usuario").value;
+let senha = document.getElementById("senha").value;
+
+if(usuario=="admin" && senha=="1234"){
+
+window.location="painel.html";
+
+}else{
+
+document.getElementById("msg").innerHTML="Login incorreto";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
