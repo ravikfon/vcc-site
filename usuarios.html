@@ -83,7 +83,7 @@ background:#ff0000;
 
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-
+let editando = -1;
 
 function salvar(){
 
@@ -93,15 +93,23 @@ let telefone = document.getElementById("telefone").value;
 
 
 let usuario = {
-
 nome:nome,
 email:email,
 telefone:telefone
-
 };
 
 
+if(editando === -1){
+
 usuarios.push(usuario);
+
+}else{
+
+usuarios[editando] = usuario;
+
+editando = -1;
+
+}
 
 
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
@@ -138,6 +146,11 @@ document.getElementById("nome").value = usuario.nome;
 document.getElementById("email").value = usuario.email;
 
 document.getElementById("telefone").value = usuario.telefone;
+
+
+editando = index;
+
+}
 
 
 usuarios.splice(index,1);
