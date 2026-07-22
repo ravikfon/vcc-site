@@ -117,7 +117,23 @@ mostrar();
 }
 
 
+function editarUsuario(index){
 
+let usuario = usuarios[index];
+
+document.getElementById("nome").value = usuario.nome;
+
+document.getElementById("email").value = usuario.email;
+
+document.getElementById("telefone").value = usuario.telefone;
+
+
+usuarios.splice(index,1);
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+
+}
 
 function excluirUsuario(index){
 
@@ -153,6 +169,12 @@ lista.innerHTML += `
 ${u.email}<br>
 
 ${u.telefone}<br><br>
+
+<button onclick="editarUsuario(${index})">
+
+Editar
+
+</button>
 
 
 <button onclick="excluirUsuario(${index})">
