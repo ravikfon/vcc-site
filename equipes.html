@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cadastro de Equipes - VCC</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f1f1f1;
+padding:20px;
+}
+
+.container{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:500px;
+margin:auto;
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0066ff;
+color:white;
+border:none;
+}
+
+.equipe{
+background:#eee;
+padding:10px;
+margin-top:10px;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+<h2>🏆 Cadastro de Equipes VCC</h2>
+
+
+<input id="nome" placeholder="Nome da equipe">
+
+<input id="capitao" placeholder="Nome do capitão">
+
+<input id="regiao" placeholder="Região">
+
+<input id="contato" placeholder="Contato">
+
+
+<button onclick="salvarEquipe()">Cadastrar Equipe</button>
+
+
+<h3>Equipes cadastradas:</h3>
+
+<div id="lista"></div>
+
+
+</div>
+
+
+
+<script>
+
+
+let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
+
+
+function salvarEquipe(){
+
+
+let equipe={
+
+nome:document.getElementById("nome").value,
+
+capitao:document.getElementById("capitao").value,
+
+regiao:document.getElementById("regiao").value,
+
+contato:document.getElementById("contato").value
+
+};
+
+
+equipes.push(equipe);
+
+
+localStorage.setItem("equipes",JSON.stringify(equipes));
+
+
+mostrarEquipes();
+
+
+}
+
+
+
+function mostrarEquipes(){
+
+
+let lista=document.getElementById("lista");
+
+
+lista.innerHTML="";
+
+
+equipes.forEach((e)=>{
+
+
+lista.innerHTML += `
+
+<div class="equipe">
+
+<strong>${e.nome}</strong><br>
+
+Capitão: ${e.capitao}<br>
+
+Região: ${e.regiao}<br>
+
+Contato: ${e.contato}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+mostrarEquipes();
+
+
+</script>
+
+
+</body>
+
+</html>
