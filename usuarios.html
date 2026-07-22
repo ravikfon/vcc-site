@@ -119,13 +119,11 @@ mostrar();
 
 
 
-function excluir(index){
+function excluirUsuario(index){
 
-usuarios.splice(index,1);
-
+usuarios.splice(index, 1);
 
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
 
 mostrar();
 
@@ -157,7 +155,7 @@ ${u.email}<br>
 ${u.telefone}<br><br>
 
 
-<button class="excluir" onclick="excluir(${index})">
+<button onclick="excluirUsuario(${index})">
 
 Excluir
 
