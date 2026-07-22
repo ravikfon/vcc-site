@@ -46,7 +46,7 @@ border-radius:5px;
 }
 
 .excluir{
-background:#ff0000;
+background:red;
 }
 
 </style>
@@ -80,10 +80,11 @@ background:#ff0000;
 
 <script>
 
-
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
 let editando = -1;
+
+
 
 function salvar(){
 
@@ -93,9 +94,11 @@ let telefone = document.getElementById("telefone").value;
 
 
 let usuario = {
+
 nome:nome,
 email:email,
 telefone:telefone
+
 };
 
 
@@ -127,19 +130,10 @@ mostrar();
 
 
 
-function excluirUsuario(index){
-
-usuarios.splice(index, 1);
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-mostrar();
-
-}
-
 function editarUsuario(index){
 
 let usuario = usuarios[index];
+
 
 document.getElementById("nome").value = usuario.nome;
 
@@ -153,12 +147,20 @@ editando = index;
 }
 
 
+
+
+function excluirUsuario(index){
+
 usuarios.splice(index,1);
+
 
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
 
+mostrar();
+
 }
+
 
 
 
@@ -168,7 +170,6 @@ let lista = document.getElementById("lista");
 
 
 lista.innerHTML="";
-
 
 
 usuarios.forEach((u,index)=>{
@@ -184,6 +185,7 @@ ${u.email}<br>
 
 ${u.telefone}<br><br>
 
+
 <button onclick="editarUsuario(${index})">
 
 Editar
@@ -191,7 +193,7 @@ Editar
 </button>
 
 
-<button onclick="excluirUsuario(${index})">
+<button class="excluir" onclick="excluirUsuario(${index})">
 
 Excluir
 
@@ -202,7 +204,6 @@ Excluir
 
 `;
 
-
 });
 
 
@@ -211,7 +212,6 @@ Excluir
 
 
 mostrar();
-
 
 
 </script>
