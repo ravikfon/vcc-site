@@ -24,20 +24,6 @@ max-width:700px;
 margin:auto;
 }
 
-input,button{
-width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:5px;
-border:1px solid #ccc;
-}
-
-button{
-background:#0066ff;
-color:white;
-border:none;
-}
-
 table{
 width:100%;
 border-collapse:collapse;
@@ -68,16 +54,6 @@ color:white;
 <h2>🏆 Classificação VCC</h2>
 
 
-<input id="nome" placeholder="Nome da equipe">
-
-<input id="vitorias" type="number" placeholder="Vitórias">
-
-<input id="derrotas" type="number" placeholder="Derrotas">
-
-
-<button onclick="adicionar()">Adicionar equipe</button>
-
-
 <table>
 
 <thead>
@@ -86,6 +62,7 @@ color:white;
 
 <th>Pos</th>
 <th>Equipe</th>
+<th>Jogos</th>
 <th>Vitórias</th>
 <th>Derrotas</th>
 <th>Pontos</th>
@@ -108,64 +85,123 @@ color:white;
 <script>
 
 
-let classificacao = JSON.parse(localStorage.getItem("classificacao")) || [];
+let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
+let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
 
 
 
-function adicionar(){
+let tabela = [];
 
 
-let equipe={
 
-nome:document.getElementById("nome").value,
+equipes.forEach(e=>{
 
-vitorias:Number(document.getElementById("vitorias").value),
+tabela.push({
 
-derrotas:Number(document.getElementById("derrotas").value)
+nome:e.nome,
 
-};
+jogos:0,
 
+vitorias:0,
 
-equipe.pontos = equipe.vitorias * 3;
+derrotas:0,
 
+pontos:0
 
-classificacao.push(equipe);
-
-
-localStorage.setItem("classificacao",JSON.stringify(classificacao));
+});
 
 
-mostrar();
+});
+
+
+
+partidas.forEach(p=>{
+
+
+if(p.finalizada){
+
+
+let time1 = tabela.find(t=>t.nome === p.time1);
+
+let time2 = tabela.find(t=>t.nome === p.time2);
+
+
+
+if(time1 && time2){
+
+
+time1.jogos++;
+
+time2.jogos++;
+
+
+
+if(Number(p.placar1) > Number(p.placar2)){
+
+
+time1.vitorias++;
+
+time2.derrotas++;
+
+time1.pontos += 3;
+
+
+}
+
+else if(Number(p.placar2) > Number(p.placar1)){
+
+
+time2.vitorias++;
+
+time1.derrotas++;
+
+time2.pontos += 3;
+
+
+}
+
+else{
+
+
+time1.pontos++;
+
+time2.pontos++;
 
 
 }
 
 
+}
 
 
-function mostrar(){
+}
 
 
-let tabela=document.getElementById("tabela");
-
-
-tabela.innerHTML="";
-
-
-classificacao.sort((a,b)=>b.pontos-a.pontos);
+});
 
 
 
-classificacao.forEach((e,index)=>{
+tabela.sort((a,b)=>b.pontos-a.pontos);
 
 
-tabela.innerHTML += `
+
+let corpo=document.getElementById("tabela");
+
+
+
+tabela.forEach((e,index)=>{
+
+
+corpo.innerHTML += `
 
 <tr>
 
 <td>${index+1}º</td>
 
 <td>${e.nome}</td>
+
+<td>${e.jogos}</td>
 
 <td>${e.vitorias}</td>
 
@@ -178,13 +214,6 @@ tabela.innerHTML += `
 `;
 
 });
-
-
-}
-
-
-
-mostrar();
 
 
 </script>
