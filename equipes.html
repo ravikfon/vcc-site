@@ -38,6 +38,10 @@ color:white;
 border:none;
 }
 
+.excluir{
+background:red;
+}
+
 .equipe{
 background:#eee;
 padding:10px;
@@ -67,7 +71,7 @@ border-radius:5px;
 <input id="contato" placeholder="Contato">
 
 
-<button onclick="salvarEquipe()">Cadastrar Equipe</button>
+<button onclick="salvarEquipe()">Salvar Equipe</button>
 
 
 <h3>Equipes cadastradas:</h3>
@@ -83,6 +87,8 @@ border-radius:5px;
 
 
 let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
+let editando = -1;
 
 
 
@@ -102,7 +108,65 @@ contato:document.getElementById("contato").value
 };
 
 
+
+if(editando === -1){
+
 equipes.push(equipe);
+
+}else{
+
+equipes[editando] = equipe;
+
+editando = -1;
+
+}
+
+
+
+localStorage.setItem("equipes",JSON.stringify(equipes));
+
+
+
+document.getElementById("nome").value="";
+document.getElementById("capitao").value="";
+document.getElementById("regiao").value="";
+document.getElementById("contato").value="";
+
+
+mostrarEquipes();
+
+
+}
+
+
+
+
+function editarEquipe(index){
+
+
+let equipe = equipes[index];
+
+
+document.getElementById("nome").value = equipe.nome;
+
+document.getElementById("capitao").value = equipe.capitao;
+
+document.getElementById("regiao").value = equipe.regiao;
+
+document.getElementById("contato").value = equipe.contato;
+
+
+editando = index;
+
+
+}
+
+
+
+function excluirEquipe(index){
+
+
+equipes.splice(index,1);
 
 
 localStorage.setItem("equipes",JSON.stringify(equipes));
@@ -115,6 +179,8 @@ mostrarEquipes();
 
 
 
+
+
 function mostrarEquipes(){
 
 
@@ -124,7 +190,7 @@ let lista=document.getElementById("lista");
 lista.innerHTML="";
 
 
-equipes.forEach((e)=>{
+equipes.forEach((e,index)=>{
 
 
 lista.innerHTML += `
@@ -137,7 +203,22 @@ Capitão: ${e.capitao}<br>
 
 Região: ${e.regiao}<br>
 
-Contato: ${e.contato}
+Contato: ${e.contato}<br><br>
+
+
+<button onclick="editarEquipe(${index})">
+
+Editar
+
+</button>
+
+
+<button class="excluir" onclick="excluirEquipe(${index})">
+
+Excluir
+
+</button>
+
 
 </div>
 
@@ -149,7 +230,9 @@ Contato: ${e.contato}
 }
 
 
+
 mostrarEquipes();
+
 
 
 </script>
