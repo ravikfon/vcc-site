@@ -110,6 +110,8 @@ Adicionar Estatística
 
 </button>
 
+<button onclick="limparMVP()">🗑️ Limpar Ranking MVP</button>
+
 
 
 <h3>Ranking Atual</h3>
@@ -306,6 +308,20 @@ ${index+1}º 🏆 ${j.nome}
 carregarJogadores();
 
 mostrarRanking();
+
+function limparMVP(){
+
+let confirmar = confirm("Deseja apagar o ranking MVP?");
+
+if(confirmar){
+
+localStorage.removeItem("mvp");
+
+location.reload();
+
+}
+
+}
 
 </script>
 
