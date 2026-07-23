@@ -6,12 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Partidas VCC</title>
+<title>Classificação VCC</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#f1f1f1;
 padding:20px;
 }
@@ -20,34 +20,32 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:600px;
+max-width:1000px;
 margin:auto;
 }
 
-input,button{
+table{
 width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:5px;
-border:1px solid #ccc;
+border-collapse:collapse;
+margin-top:20px;
 }
 
-button{
-background:#0066ff;
+th,td{
+padding:10px;
+border-bottom:1px solid #ccc;
+text-align:center;
+}
+
+th{
+background:#111;
 color:white;
-border:none;
 }
 
-.partida{
-background:#eee;
-padding:12px;
-margin-top:10px;
-border-radius:5px;
+.lider{
+background:#fff3cd;
+font-weight:bold;
 }
 
-.finalizada{
-background:#d4ffd4;
-}
 
 </style>
 
@@ -60,27 +58,42 @@ background:#d4ffd4;
 <div class="container">
 
 
-<h2>📅 Agenda de Partidas VCC</h2>
+<h2>🏆 Classificação VCC</h2>
 
 
-<input id="time1" placeholder="Equipe 1">
+<table>
 
-<input id="time2" placeholder="Equipe 2">
+<thead>
 
-<input id="data" type="date">
+<tr>
 
-<input id="hora" type="time">
+<th>Pos</th>
+
+<th>Equipe</th>
+
+<th>Jogos</th>
+
+<th>Vitórias</th>
+
+<th>Derrotas</th>
+
+<th>Mapas</th>
+
+<th>Rounds</th>
+
+<th>Saldo</th>
+
+<th>Pontos</th>
+
+</tr>
+
+</thead>
 
 
-<button onclick="salvarPartida()">
-Adicionar Partida
-</button>
+<tbody id="tabela"></tbody>
 
 
-<h3>Partidas:</h3>
-
-
-<div id="lista"></div>
+</table>
 
 
 </div>
@@ -90,140 +103,204 @@ Adicionar Partida
 <script>
 
 
+let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
 let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
 
 
 
-function salvarPartida(){
+let tabela = [];
 
 
-let partida = {
 
-time1:document.getElementById("time1").value,
+equipes.forEach(e=>{
 
-time2:document.getElementById("time2").value,
 
-data:document.getElementById("data").value,
+tabela.push({
 
-hora:document.getElementById("hora").value,
+nome:e.nome,
 
-placar1:"",
-placar2:"",
-finalizada:false
+jogos:0,
 
-};
+vitorias:0,
 
+derrotas:0,
 
-partidas.push(partida);
+mapasV:0,
 
+mapasD:0,
 
-localStorage.setItem("partidas",JSON.stringify(partidas));
+roundsF:0,
 
+roundsS:0,
 
-mostrarPartidas();
+saldo:0,
 
-
-}
-
-
-
-
-function finalizarPartida(index){
-
-
-let p = partidas[index];
-
-
-let placar1 = prompt("Placar da "+p.time1);
-
-let placar2 = prompt("Placar da "+p.time2);
-
-
-
-p.placar1 = placar1;
-
-p.placar2 = placar2;
-
-p.finalizada = true;
-
-
-
-localStorage.setItem("partidas",JSON.stringify(partidas));
-
-
-mostrarPartidas();
-
-
-}
-
-
-
-
-function mostrarPartidas(){
-
-
-let lista=document.getElementById("lista");
-
-
-lista.innerHTML="";
-
-
-
-partidas.forEach((p,index)=>{
-
-
-let resultado="";
-
-
-if(p.finalizada){
-
-resultado = `
-<br>
-🏆 Resultado: ${p.time1} ${p.placar1} x ${p.placar2} ${p.time2}
-`;
-
-}
-
-
-
-lista.innerHTML += `
-
-<div class="partida ${p.finalizada ? "finalizada":""}">
-
-
-<strong>${p.time1} 🆚 ${p.time2}</strong><br>
-
-📅 ${p.data}<br>
-
-⏰ ${p.hora}
-
-
-${resultado}
-
-
-${!p.finalizada ? `
-
-<button onclick="finalizarPartida(${index})">
-
-Finalizar partida
-
-</button>
-
-`: ""}
-
-
-</div>
-
-`;
+pontos:0
 
 });
 
 
+});
+// Ler partidas finalizadas
+
+partidas.forEach(p=>{
+
+
+if(p.finalizada){
+
+
+let time1 = tabela.find(t=>t.nome === p.time1);
+
+let time2 = tabela.find(t=>t.nome === p.time2);
+
+
+
+if(time1 && time2){
+
+
+time1.jogos++;
+
+time2.jogos++;
+
+
+
+// Mapas
+
+time1.mapasV += Number(p.mapas1);
+time1.mapasD += Number(p.mapas2);
+
+
+time2.mapasV += Number(p.mapas2);
+time2.mapasD += Number(p.mapas1);
+
+
+
+// Rounds
+
+time1.roundsF += Number(p.rounds1);
+time1.roundsS += Number(p.rounds2);
+
+
+time2.roundsF += Number(p.rounds2);
+time2.roundsS += Number(p.rounds1);
+
+
+
+// Saldo de rounds
+
+time1.saldo += Number(p.rounds1) - Number(p.rounds2);
+
+time2.saldo += Number(p.rounds2) - Number(p.rounds1);
+
+
+
+// Resultado da série MD3
+
+if(Number(p.mapas1) > Number(p.mapas2)){
+
+
+time1.vitorias++;
+
+time2.derrotas++;
+
+time1.pontos += 3;
+
+
+}
+
+else{
+
+
+time2.vitorias++;
+
+time1.derrotas++;
+
+time2.pontos += 3;
+
+
 }
 
 
 
-mostrarPartidas();
+}
+
+
+}
+
+
+});
+
+
+
+
+
+// Ordenação
+
+tabela.sort((a,b)=>{
+
+
+if(b.pontos !== a.pontos){
+
+return b.pontos - a.pontos;
+
+}
+
+
+if(b.vitorias !== a.vitorias){
+
+return b.vitorias - a.vitorias;
+
+}
+
+
+return b.saldo - a.saldo;
+
+
+});
+
+
+
+
+
+// Mostrar tabela
+
+let corpo = document.getElementById("tabela");
+
+
+
+tabela.forEach((e,index)=>{
+
+
+corpo.innerHTML += `
+
+<tr class="${index===0 ? "lider":""}">
+
+
+<td>${index+1}º</td>
+
+<td>${e.nome}</td>
+
+<td>${e.jogos}</td>
+
+<td>${e.vitorias}</td>
+
+<td>${e.derrotas}</td>
+
+<td>${e.mapasV}-${e.mapasD}</td>
+
+<td>${e.roundsF}-${e.roundsS}</td>
+
+<td>${e.saldo}</td>
+
+<td>${e.pontos}</td>
+
+
+</tr>
+
+`;
+
+});
 
 
 
