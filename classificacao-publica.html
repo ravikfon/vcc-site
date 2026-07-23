@@ -145,6 +145,12 @@ border-radius:8px;
 
 <th>Derrotas</th>
 
+<th>Mapas</th>
+
+<th>Rounds</th>
+
+<th>Saldo</th>
+
 <th>Pontos</th>
 
 </tr>
@@ -227,8 +233,21 @@ corpo.innerHTML += `
 
 <td>${equipe.derrotas}</td>
 
+<td>
+${equipe.mapasV}-${equipe.mapasD}
+</td>
 
-<td>${equipe.pontos}</td>
+<td>
+${equipe.roundsF}-${equipe.roundsS}
+</td>
+
+<td>
+${equipe.saldo}
+</td>
+
+<td>
+${equipe.pontos}
+</td>
 
 
 </tr>
