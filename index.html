@@ -303,15 +303,19 @@ ranking.slice(0,5).forEach((equipe,index)=>{
 
 lista.innerHTML += `
 
-<li>
+lista.innerHTML += `
 
-${index + 1}º - ${equipe.nome}
+<li style="margin-bottom:15px;">
+
+<strong>${index + 1}º - ${equipe.nome}</strong>
 
 <br>
 
-${equipe.pontos} pontos
+🏆 ${equipe.pontos} pontos
 
 </li>
+
+`;
 
 `;
 
