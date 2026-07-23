@@ -275,7 +275,54 @@ Ver Equipes
 
 </footer>
 
+<script>
 
+let ranking =
+JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
+
+
+let lista =
+document.getElementById("ranking");
+
+
+if(ranking.length === 0){
+
+lista.innerHTML =
+"<li>Nenhuma classificação disponível.</li>";
+
+}
+
+else{
+
+
+lista.innerHTML = "";
+
+
+ranking.slice(0,5).forEach((equipe,index)=>{
+
+
+lista.innerHTML += `
+
+<li>
+
+${index + 1}º - ${equipe.nome}
+
+<br>
+
+${equipe.pontos} pontos
+
+</li>
+
+`;
+
+
+});
+
+
+}
+
+
+</script>
 
 <script src="script.js"></script>
 
