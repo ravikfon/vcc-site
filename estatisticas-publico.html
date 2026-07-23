@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Estatísticas VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+padding:20px;
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+h1{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+.player{
+
+background:#374151;
+padding:20px;
+margin-top:15px;
+border-radius:10px;
+
+}
+
+
+.nome{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+
+.voltar{
+
+display:block;
+margin-top:25px;
+text-align:center;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>📊 Estatísticas VCC</h1>
+
+
+<div id="lista">
+
+Carregando estatísticas...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+
+<script>
+
+
+let estatisticas =
+JSON.parse(localStorage.getItem("estatisticas")) || [];
+
+
+let lista =
+document.getElementById("lista");
+
+
+
+if(estatisticas.length === 0){
+
+
+lista.innerHTML = `
+
+<p>
+
+📊 Nenhuma estatística registrada.
+
+</p>
+
+`;
+
+
+}else{
+
+
+lista.innerHTML="";
+
+
+
+// ordenar por desempenho de abates
+
+estatisticas.sort((a,b)=>{
+
+
+return b.abates - a.abates;
+
+
+});
+
+
+
+estatisticas.forEach((jogador,index)=>{
+
+
+let desempenho = 0;
+
+
+if(jogador.mapas > 0){
+
+desempenho = Math.round(
+
+(jogador.vitorias / jogador.mapas) * 100
+
+);
+
+}
+
+
+
+lista.innerHTML += `
+
+
+<div class="player">
+
+
+<div class="nome">
+
+${index+1}º 👤 ${jogador.nome}
+
+</div>
+
+
+<br>
+
+
+🎯 Abates:
+
+${jogador.abates}
+
+
+<br><br>
+
+
+🏆 Vitórias:
+
+${jogador.vitorias}
+
+
+<br><br>
+
+
+🗺️ Mapas jogados:
+
+${jogador.mapas}
+
+
+<br><br>
+
+
+📈 Desempenho:
+
+${desempenho}%
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+</script>
+
+</script>
+
+</body>
+
+</html>

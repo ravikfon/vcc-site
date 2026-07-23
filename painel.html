@@ -108,6 +108,8 @@ margin-left:0;
 
 <button onclick="abrirMVP()">⭐ Ranking MVP</button>
 
+<button onclick="abrirEstatisticas()">📊 Estatísticas</button>
+
 <button>Configurações</button>
 
 <button onclick="sair()">Sair</button>
@@ -205,6 +207,11 @@ window.location="mvp.html";
 
 }
 
+function abrirEstatisticas(){
+
+window.location="estatisticas.html";
+
+}
 
 
 let listaUsuarios = JSON.parse(localStorage.getItem("usuarios")) || [];

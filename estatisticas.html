@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Estatísticas VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#f1f1f1;
+padding:20px;
+
+}
+
+
+.container{
+
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:700px;
+margin:auto;
+
+}
+
+
+input,select,button{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:5px;
+border:1px solid #ccc;
+
+}
+
+
+button{
+
+background:#0066ff;
+color:white;
+border:none;
+
+}
+
+
+.jogador{
+
+background:#eee;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+
+}
+
+
+.excluir{
+
+background:red;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h2>📊 Estatísticas VCC</h2>
+
+
+
+<label>Jogador</label>
+
+<select id="jogador">
+
+</select>
+
+
+
+<label>Abates</label>
+
+<input id="abates" type="number" placeholder="Quantidade de abates">
+
+
+
+<label>Vitórias</label>
+
+<input id="vitorias" type="number" placeholder="Quantidade de vitórias">
+
+
+
+<label>Mapas jogados</label>
+
+<input id="mapas" type="number" placeholder="Quantidade de mapas">
+
+
+
+<button onclick="salvarEstatistica()">
+
+Salvar Estatística
+
+</button>
+
+
+
+<h3>Desempenho dos jogadores</h3>
+
+
+<div id="lista">
+
+</div>
+
+
+</div>
+
+<script>
+
+
+let jogadores =
+JSON.parse(localStorage.getItem("jogadores")) || [];
+
+
+let estatisticas =
+JSON.parse(localStorage.getItem("estatisticas")) || [];
+
+
+
+// Carregar jogadores
+
+function carregarJogadores(){
+
+
+let select =
+document.getElementById("jogador");
+
+
+select.innerHTML="";
+
+
+jogadores.forEach(j=>{
+
+
+select.innerHTML += `
+
+<option value="${j.nome}">
+
+${j.nome}
+
+</option>
+
+`;
+
+});
+
+
+}
+
+
+
+
+// Salvar estatística
+
+function salvarEstatistica(){
+
+
+let nome =
+document.getElementById("jogador").value;
+
+
+let abates =
+Number(document.getElementById("abates").value);
+
+
+let vitorias =
+Number(document.getElementById("vitorias").value);
+
+
+let mapas =
+Number(document.getElementById("mapas").value);
+
+
+
+let jogador =
+estatisticas.find(j=>j.nome === nome);
+
+
+
+if(jogador){
+
+
+jogador.abates += abates;
+
+jogador.vitorias += vitorias;
+
+jogador.mapas += mapas;
+
+
+}else{
+
+
+estatisticas.push({
+
+nome:nome,
+
+abates:abates,
+
+vitorias:vitorias,
+
+mapas:mapas
+
+});
+
+
+}
+
+
+
+localStorage.setItem(
+
+"estatisticas",
+
+JSON.stringify(estatisticas)
+
+);
+
+
+
+mostrarEstatisticas();
+
+
+}
+
+
+
+
+// Mostrar desempenho
+
+function mostrarEstatisticas(){
+
+
+let lista =
+document.getElementById("lista");
+
+
+lista.innerHTML="";
+
+
+
+estatisticas.sort((a,b)=>{
+
+
+return b.abates - a.abates;
+
+
+});
+
+
+
+estatisticas.forEach((j,index)=>{
+
+
+let desempenho = 0;
+
+
+if(j.mapas > 0){
+
+desempenho =
+Math.round((j.vitorias / j.mapas) * 100);
+
+}
+
+
+
+lista.innerHTML += `
+
+
+<div class="jogador">
+
+
+<strong>
+
+${index+1}º 👤 ${j.nome}
+
+</strong>
+
+
+<br>
+
+
+🎯 Abates:
+${j.abates}
+
+
+<br>
+
+
+🏆 Vitórias:
+${j.vitorias}
+
+
+<br>
+
+
+🗺️ Mapas:
+${j.mapas}
+
+
+<br>
+
+
+📈 Desempenho:
+${desempenho}%
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+carregarJogadores();
+
+mostrarEstatisticas();
+
+
+
+</script>
+
+</script>
+
+</body>
+
+</html>
