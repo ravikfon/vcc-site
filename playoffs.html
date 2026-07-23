@@ -10,67 +10,112 @@
 
 <style>
 
-body{
-font-family:Arial, sans-serif;
-background:#f1f1f1;
-padding:20px;
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
+
+body{
+margin:0;
+padding:20px;
+background:#111827;
+color:white;
+}
+
 
 .container{
-background:white;
-padding:20px;
-border-radius:10px;
-max-width:800px;
+
+max-width:900px;
 margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
 }
 
+
 h2{
+
 text-align:center;
+color:#60a5fa;
+
 }
+
 
 
 button{
+
 width:100%;
 padding:12px;
 margin-top:10px;
-background:#0066ff;
-color:white;
 border:none;
-border-radius:5px;
+border-radius:8px;
+background:#2563eb;
+color:white;
 font-size:16px;
+cursor:pointer;
+
 }
+
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
 
 
 .jogo{
 
-background:#eee;
-padding:15px;
+background:#374151;
+padding:20px;
 margin-top:15px;
-border-radius:10px;
+border-radius:12px;
 text-align:center;
 
 }
 
 
-.vencedor{
+.time{
 
-background:#d4ffd4;
+font-size:18px;
+font-weight:bold;
+
+}
+
+
+
+.fase{
+
+color:#93c5fd;
+font-size:20px;
+margin-bottom:10px;
 
 }
 
 
 .final{
 
-background:#fff3cd;
+border:2px solid #facc15;
 
 }
 
 
 .campeao{
 
-background:#ffd700;
+background:#facc15;
+color:#111;
+font-size:22px;
 font-weight:bold;
-font-size:20px;
+
+}
+
+
+
+.aguardando{
+
+color:#9ca3af;
 
 }
 
@@ -91,7 +136,7 @@ font-size:20px;
 
 <button onclick="gerarPlayoffs()">
 
-Gerar Chave dos Playoffs
+Gerar Nova Chave
 
 </button>
 
@@ -101,16 +146,33 @@ Gerar Chave dos Playoffs
 
 </div>
 
+
 <script>
 
-let playoffs = JSON.parse(localStorage.getItem("playoffs")) || {};
+
+let playoffs =
+JSON.parse(localStorage.getItem("playoffs")) || {};
 
 
 
+function salvar(){
+
+
+localStorage.setItem(
+
+"playoffs",
+
+JSON.stringify(playoffs)
+
+);
+
+
+}
 function gerarPlayoffs(){
 
 
-let tabela = JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
+let tabela =
+JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
 
 
 
@@ -127,9 +189,9 @@ return;
 playoffs = {
 
 
-primeiro: tabela[0].nome,
+primeiro:tabela[0].nome,
 
-segundo: tabela[1].nome,
+segundo:tabela[1].nome,
 
 
 
@@ -209,125 +271,51 @@ mostrar();
 
 
 
-function salvar(){
+function abrirSerie(fase){
 
 
 localStorage.setItem(
 
-"playoffs",
+"serieAtual",
 
-JSON.stringify(playoffs)
+fase
 
 );
 
 
-}
-function definirVencedor(fase){
 
-
-let vencedor = prompt("Digite o nome da equipe vencedora");
-
-
-if(!vencedor)return;
-
-
-
-if(fase==="playoff1"){
-
-playoffs.playoff1.vencedor = vencedor;
-
-}
-
-
-
-if(fase==="playoff2"){
-
-playoffs.playoff2.vencedor = vencedor;
-
-}
-
-
-
-// Criar Playoff 3 quando os dois anteriores terminarem
-
-if(
-playoffs.playoff1.vencedor &&
-playoffs.playoff2.vencedor
-){
-
-playoffs.playoff3.time1 = playoffs.playoff1.vencedor;
-
-playoffs.playoff3.time2 = playoffs.playoff2.vencedor;
-
-}
-
-
-
-
-if(fase==="playoff3"){
-
-playoffs.playoff3.vencedor = vencedor;
-
-playoffs.semi.time2 = vencedor;
-
-}
-
-
-
-
-if(fase==="semi"){
-
-playoffs.semi.vencedor = vencedor;
-
-playoffs.final.time2 = vencedor;
-
-}
-
-
-
-
-if(fase==="final"){
-
-playoffs.final.vencedor = vencedor;
-
-}
-
-
-
-salvar();
-
-mostrar();
+window.location="serie.html";
 
 
 }
-
-
-
-
-
 function mostrar(){
 
 
 let div = document.getElementById("chave");
 
 
-if(!div)return;
-
-
-div.innerHTML = "";
+div.innerHTML="";
 
 
 
-if(!playoffs.playoff1)return;
+if(!playoffs.playoff1){
+
+return;
+
+}
 
 
 
 div.innerHTML += `
 
 
+
 <div class="jogo">
 
-<h3>🔥 Playoff 1</h3>
+<div class="fase">🔥 Playoff 1</div>
+
+
+<div class="time">
 
 ${playoffs.playoff1.time1}
 
@@ -335,20 +323,28 @@ ${playoffs.playoff1.time1}
 
 ${playoffs.playoff1.time2}
 
+</div>
 
-<button onclick="definirVencedor('playoff1')">
 
-Definir vencedor
+<button onclick="abrirSerie('playoff1')">
+
+🎮 Administrar Série
 
 </button>
+
 
 </div>
 
 
 
+
+
 <div class="jogo">
 
-<h3>🔥 Playoff 2</h3>
+<div class="fase">🔥 Playoff 2</div>
+
+
+<div class="time">
 
 ${playoffs.playoff2.time1}
 
@@ -356,20 +352,28 @@ ${playoffs.playoff2.time1}
 
 ${playoffs.playoff2.time2}
 
+</div>
 
-<button onclick="definirVencedor('playoff2')">
 
-Definir vencedor
+<button onclick="abrirSerie('playoff2')">
+
+🎮 Administrar Série
 
 </button>
+
 
 </div>
 
 
 
+
+
 <div class="jogo">
 
-<h3>🔥 Playoff 3</h3>
+<div class="fase">🔥 Playoff 3</div>
+
+
+<div class="time">
 
 ${playoffs.playoff3.time1 || "Aguardando"}
 
@@ -377,20 +381,28 @@ ${playoffs.playoff3.time1 || "Aguardando"}
 
 ${playoffs.playoff3.time2 || "Aguardando"}
 
+</div>
 
-<button onclick="definirVencedor('playoff3')">
 
-Definir vencedor
+<button onclick="abrirSerie('playoff3')">
+
+🎮 Administrar Série
 
 </button>
+
 
 </div>
 
 
 
-<div class="jogo vencedor">
 
-<h3>⚔️ Semifinal</h3>
+
+<div class="jogo">
+
+<div class="fase">⚔️ Semifinal</div>
+
+
+<div class="time">
 
 ${playoffs.semi.time1}
 
@@ -398,20 +410,28 @@ ${playoffs.semi.time1}
 
 ${playoffs.semi.time2 || "Aguardando"}
 
+</div>
 
-<button onclick="definirVencedor('semi')">
 
-Definir vencedor
+<button onclick="abrirSerie('semi')">
+
+🎮 Administrar Série
 
 </button>
+
 
 </div>
 
 
 
+
+
 <div class="jogo final">
 
-<h3>🏆 FINAL MD5</h3>
+<div class="fase">🏆 FINAL MD5</div>
+
+
+<div class="time">
 
 ${playoffs.final.time1}
 
@@ -419,14 +439,18 @@ ${playoffs.final.time1}
 
 ${playoffs.final.time2 || "Aguardando"}
 
+</div>
 
-<button onclick="definirVencedor('final')">
 
-Definir campeão
+<button onclick="abrirSerie('final')">
+
+🎮 Administrar Série
 
 </button>
 
+
 </div>
+
 
 
 `;
@@ -438,22 +462,31 @@ if(playoffs.final.vencedor){
 
 div.innerHTML += `
 
+
 <div class="jogo campeao">
+
 
 🏆 CAMPEÃO VCC
 
-<br>
+
+<br><br>
+
 
 ${playoffs.final.vencedor}
 
+
 </div>
+
 
 `;
 
 }
 
 
+
 }
+
+
 
 
 
