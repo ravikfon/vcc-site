@@ -1,51 +1,285 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VCC - VALORANT Console Championship</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VCC - Valorant Console Championship</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+}
+
+
+header{
+
+background:#2563eb;
+padding:30px;
+text-align:center;
+
+}
+
+
+header h1{
+
+margin:0;
+font-size:28px;
+
+}
+
+
+nav{
+
+background:#1f2937;
+display:flex;
+justify-content:center;
+gap:15px;
+padding:15px;
+flex-wrap:wrap;
+
+}
+
+
+nav a{
+
+color:white;
+text-decoration:none;
+background:#374151;
+padding:10px 15px;
+border-radius:8px;
+
+}
+
+
+nav a:hover{
+
+background:#2563eb;
+
+}
+
+
+
+.banner{
+
+text-align:center;
+padding:50px 20px;
+
+}
+
+
+
+.banner h2{
+
+font-size:32px;
+
+}
+
+
+
+.card{
+
+background:#1f2937;
+margin:20px auto;
+padding:20px;
+max-width:800px;
+border-radius:15px;
+
+}
+
+
+
+.card h2{
+
+color:#60a5fa;
+
+}
+
+
+
+.botao{
+
+display:inline-block;
+margin-top:10px;
+background:#2563eb;
+padding:12px 20px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+
+footer{
+
+text-align:center;
+padding:20px;
+background:#000;
+
+}
+
+
+</style>
+
 </head>
+
+
 <body>
 
+
 <header>
-    <h1>🏆 VALORANT Console Championship</h1>
-    <p>Temporada 1</p>
+
+<h1>🏆 VALORANT CONSOLE CHAMPIONSHIP</h1>
+
+<p>Temporada 1</p>
+
 </header>
 
+
+
 <nav>
-    <a href="#">Início</a>
-    <a href="#">Classificação</a>
-    <a href="#">Equipes</a>
-    <a href="#">Partidas</a>
-    <a href="#">Regulamento</a>
+
+<a href="index.html">🏠 Início</a>
+
+<a href="classificacao-publica.html">🏆 Classificação</a>
+
+<a href="equipes-publico.html">👥 Equipes</a>
+
+<a href="partidas-publico.html">🎮 Partidas</a>
+
+<a href="regulamento.html">📜 Regulamento</a>
+
 </nav>
 
 <section class="banner">
-    <h2>Bem-vindo ao VCC</h2>
-    <p>O maior campeonato de VALORANT Console.</p>
+
+<h2>Bem-vindo ao VCC</h2>
+
+<p>
+O campeonato de VALORANT Console Championship.
+Acompanhe equipes, partidas, classificação e playoffs.
+</p>
+
+
+<a class="botao" href="classificacao-publica.html">
+
+Ver Classificação
+
+</a>
+
+
 </section>
 
-<section class="card">
-    <h2>📅 Próxima Partida</h2>
-    <p>Equipe 1 🆚 Equipe 2</p>
-    <p>Data: Em breve</p>
-</section>
+
+
 
 <section class="card">
-    <h2>🏆 Classificação</h2>
-    <ol>
-        <li>Equipe 1</li>
-        <li>Equipe 2</li>
-        <li>Equipe 3</li>
-    </ol>
+
+<h2>📅 Próximas Partidas</h2>
+
+
+<p id="proximaPartida">
+
+Nenhuma partida agendada.
+
+</p>
+
+
 </section>
+
+
+
+
+<section class="card">
+
+<h2>🏆 Classificação Atual</h2>
+
+
+<ol id="ranking">
+
+
+<li>
+
+Carregando classificação...
+
+</li>
+
+
+</ol>
+
+
+</section>
+
+
+
+
+<section class="card">
+
+<h2>🌳 Playoffs</h2>
+
+
+<p>
+
+Veja a chave dos playoffs e acompanhe a disputa pelo título.
+
+</p>
+
+
+<a class="botao" href="playoffs-publico.html">
+
+Ver Playoffs
+
+</a>
+
+
+</section>
+
+
+
+
+<section class="card">
+
+<h2>👥 Equipes Participantes</h2>
+
+
+<p>
+
+Confira as equipes inscritas no VCC.
+
+</p>
+
+
+<a class="botao" href="equipes-publico.html">
+
+Ver Equipes
+
+</a>
+
+
+</section>
+
+
 
 <footer>
-    © 2026 VCC - VALORANT Console Championship
+
+© 2026 VCC - VALORANT Console Championship
+
 </footer>
+
+
 
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
