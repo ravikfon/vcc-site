@@ -11,7 +11,7 @@
 <style>
 
 body{
-font-family:Arial, sans-serif;
+font-family:Arial;
 background:#f1f1f1;
 padding:20px;
 }
@@ -20,32 +20,30 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:1000px;
+max-width:700px;
 margin:auto;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+.jogo{
+background:#eee;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
 }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #ccc;
-text-align:center;
-}
-
-th{
-background:#111;
+button{
+background:#0066ff;
 color:white;
+border:none;
+padding:10px;
+border-radius:5px;
+width:100%;
+margin-top:10px;
 }
 
-.lider{
+.final{
 background:#fff3cd;
-font-weight:bold;
 }
-
 
 </style>
 
@@ -61,39 +59,12 @@ font-weight:bold;
 <h2>🏆 Playoffs VCC</h2>
 
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>Pos</th>
-
-<th>Equipe</th>
-
-<th>Jogos</th>
-
-<th>Vitórias</th>
-
-<th>Derrotas</th>
-
-<th>Mapas</th>
-
-<th>Rounds</th>
-
-<th>Saldo</th>
-
-<th>Pontos</th>
-
-</tr>
-
-</thead>
+<button onclick="gerarChave()">
+Gerar Chave dos Playoffs
+</button>
 
 
-<tbody id="tabela"></tbody>
-
-
-</table>
+<div id="chave"></div>
 
 
 </div>
@@ -103,205 +74,202 @@ font-weight:bold;
 <script>
 
 
+let playoffs = JSON.parse(localStorage.getItem("playoffs")) || {};
+
+
+
+function gerarChave(){
+
+
 let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
 
-let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
 
 
+let ranking = equipes.map(e=>{
 
-let tabela = [];
-
-
-
-equipes.forEach(e=>{
-
-
-tabela.push({
+return {
 
 nome:e.nome,
+pontos:e.pontos || 0
 
-jogos:0,
-
-vitorias:0,
-
-derrotas:0,
-
-mapasV:0,
-
-mapasD:0,
-
-roundsF:0,
-
-roundsS:0,
-
-saldo:0,
-
-pontos:0
+};
 
 });
 
 
-});
-// Ler partidas finalizadas
 
-partidas.forEach(p=>{
-
-
-if(p.finalizada){
-
-
-let time1 = tabela.find(t=>t.nome === p.time1);
-
-let time2 = tabela.find(t=>t.nome === p.time2);
+ranking.sort((a,b)=>b.pontos-a.pontos);
 
 
 
-if(time1 && time2){
+if(ranking.length < 6){
 
+alert("Precisa ter 6 equipes cadastradas!");
 
-time1.jogos++;
-
-time2.jogos++;
-
-
-
-// Mapas
-
-time1.mapasV += Number(p.mapas1);
-time1.mapasD += Number(p.mapas2);
-
-
-time2.mapasV += Number(p.mapas2);
-time2.mapasD += Number(p.mapas1);
-
-
-
-// Rounds
-
-time1.roundsF += Number(p.rounds1);
-time1.roundsS += Number(p.rounds2);
-
-
-time2.roundsF += Number(p.rounds2);
-time2.roundsS += Number(p.rounds1);
-
-
-
-// Saldo de rounds
-
-time1.saldo += Number(p.rounds1) - Number(p.rounds2);
-
-time2.saldo += Number(p.rounds2) - Number(p.rounds1);
-
-
-
-// Resultado da série MD3
-
-if(Number(p.mapas1) > Number(p.mapas2)){
-
-
-time1.vitorias++;
-
-time2.derrotas++;
-
-time1.pontos += 3;
-
+return;
 
 }
 
-else{
 
 
-time2.vitorias++;
+playoffs={
 
-time1.derrotas++;
+primeiro:ranking[0].nome,
 
-time2.pontos += 3;
+segundo:ranking[1].nome,
+
+
+jogoA:{
+time1:ranking[2].nome,
+time2:ranking[5].nome,
+vencedor:""
+},
+
+
+jogoB:{
+time1:ranking[3].nome,
+time2:ranking[4].nome,
+vencedor:""
+},
+
+
+semi:{
+time1:"",
+time2:"",
+vencedor:""
+},
+
+
+final:{
+time1:"",
+time2:"",
+formato:"MD5",
+vencedor:""
+}
+
+
+};
+
+
+
+localStorage.setItem(
+"playoffs",
+JSON.stringify(playoffs)
+);
+
+
+mostrar();
 
 
 }
 
 
 
-}
+function escolherVencedor(tipo){
 
 
-}
+let vencedor = prompt("Digite o nome da equipe vencedora");
 
 
-});
-
-
+if(!vencedor)return;
 
 
 
-// Ordenação
+if(tipo==="A"){
 
-tabela.sort((a,b)=>{
-
-
-if(b.pontos !== a.pontos){
-
-return b.pontos - a.pontos;
+playoffs.jogoA.vencedor=vencedor;
 
 }
 
 
-if(b.vitorias !== a.vitorias){
+if(tipo==="B"){
 
-return b.vitorias - a.vitorias;
+playoffs.jogoB.vencedor=vencedor;
 
 }
 
 
-return b.saldo - a.saldo;
+localStorage.setItem(
+"playoffs",
+JSON.stringify(playoffs)
+);
 
 
-});
+mostrar();
 
 
-
-
-
-// Mostrar tabela
-
-let corpo = document.getElementById("tabela");
+}
 
 
 
-tabela.forEach((e,index)=>{
+function mostrar(){
 
 
-corpo.innerHTML += `
-
-<tr class="${index===0 ? "lider":""}">
+let div=document.getElementById("chave");
 
 
-<td>${index+1}º</td>
-
-<td>${e.nome}</td>
-
-<td>${e.jogos}</td>
-
-<td>${e.vitorias}</td>
-
-<td>${e.derrotas}</td>
-
-<td>${e.mapasV}-${e.mapasD}</td>
-
-<td>${e.roundsF}-${e.roundsS}</td>
-
-<td>${e.saldo}</td>
-
-<td>${e.pontos}</td>
+div.innerHTML="";
 
 
-</tr>
+
+if(!playoffs.jogoA)return;
+
+
+
+div.innerHTML+=`
+
+<div class="jogo">
+
+<h3>Playoff 1</h3>
+
+${playoffs.jogoA.time1} 🆚 ${playoffs.jogoA.time2}
+
+<button onclick="escolherVencedor('A')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo">
+
+<h3>Playoff 2</h3>
+
+${playoffs.jogoB.time1} 🆚 ${playoffs.jogoB.time2}
+
+
+<button onclick="escolherVencedor('B')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo final">
+
+<h3>🏆 Final VCC - MD5</h3>
+
+1º Lugar: ${playoffs.primeiro}
+
+<br>
+
+Aguardando semifinal
+
+</div>
 
 `;
 
-});
+}
 
+
+
+mostrar();
 
 
 </script>
