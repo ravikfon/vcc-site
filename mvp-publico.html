@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ranking MVP VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+padding:20px;
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+h1{
+
+text-align:center;
+color:#facc15;
+
+}
+
+
+.mvp{
+
+background:#374151;
+padding:20px;
+margin-top:15px;
+border-radius:10px;
+text-align:center;
+
+}
+
+
+.posicao{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+
+.voltar{
+
+display:block;
+margin-top:25px;
+text-align:center;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>⭐ Ranking MVP VCC</h1>
+
+
+<div id="ranking">
+
+Carregando ranking...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+
+<script>
+
+
+let rankingMVP =
+JSON.parse(localStorage.getItem("rankingMVP")) || [];
+
+
+let lista =
+document.getElementById("ranking");
+
+
+
+if(rankingMVP.length === 0){
+
+
+lista.innerHTML = `
+
+<p>
+
+⭐ Nenhum MVP registrado ainda.
+
+</p>
+
+`;
+
+
+}else{
+
+
+lista.innerHTML = "";
+
+
+
+rankingMVP.sort((a,b)=>{
+
+
+return b.mvp - a.mvp;
+
+
+});
+
+
+
+rankingMVP.forEach((j,index)=>{
+
+
+lista.innerHTML += `
+
+
+<div class="mvp">
+
+
+<div class="posicao">
+
+
+${index+1}º 🏆 ${j.nome}
+
+
+</div>
+
+
+<br>
+
+
+⭐ MVPs:
+
+${j.mvp}
+
+
+<br><br>
+
+
+🎯 Abates:
+
+${j.abates}
+
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+</script>
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ranking MVP VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#f1f1f1;
+padding:20px;
+
+}
+
+
+.container{
+
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:700px;
+margin:auto;
+
+}
+
+
+input,select,button{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:5px;
+border:1px solid #ccc;
+
+}
+
+
+button{
+
+background:#0066ff;
+color:white;
+border:none;
+
+}
+
+
+.jogador{
+
+background:#eee;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+
+}
+
+
+.excluir{
+
+background:red;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h2>⭐ Ranking MVP VCC</h2>
+
+
+
+<label>Jogador</label>
+
+<select id="jogador">
+
+</select>
+
+
+
+<label>Quantidade de MVPs</label>
+
+<input id="mvp" type="number" placeholder="Ex: 3">
+
+
+
+<label>Abates</label>
+
+<input id="abates" type="number" placeholder="Ex: 85">
+
+
+
+<button onclick="salvarMVP()">
+
+Adicionar Estatística
+
+</button>
+
+
+
+<h3>Ranking Atual</h3>
+
+
+<div id="lista">
+
+</div>
+
+
+</div>
+
+<script>
+
+
+let jogadores =
+JSON.parse(localStorage.getItem("jogadores")) || [];
+
+
+let rankingMVP =
+JSON.parse(localStorage.getItem("rankingMVP")) || [];
+
+
+
+// Carregar jogadores no campo
+
+function carregarJogadores(){
+
+
+let select =
+document.getElementById("jogador");
+
+
+select.innerHTML="";
+
+
+jogadores.forEach(j=>{
+
+
+select.innerHTML += `
+
+<option value="${j.nome}">
+
+${j.nome}
+
+</option>
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+// Salvar estatística
+
+function salvarMVP(){
+
+
+let jogador =
+document.getElementById("jogador").value;
+
+
+let mvp =
+Number(document.getElementById("mvp").value);
+
+
+let abates =
+Number(document.getElementById("abates").value);
+
+
+
+if(!jogador){
+
+alert("Selecione um jogador");
+
+return;
+
+}
+
+
+
+let existente =
+rankingMVP.find(j=>j.nome === jogador);
+
+
+
+if(existente){
+
+
+existente.mvp += mvp;
+
+existente.abates += abates;
+
+
+}else{
+
+
+rankingMVP.push({
+
+nome:jogador,
+
+mvp:mvp,
+
+abates:abates
+
+});
+
+
+}
+
+
+
+localStorage.setItem(
+
+"rankingMVP",
+
+JSON.stringify(rankingMVP)
+
+);
+
+
+
+mostrarRanking();
+
+
+}
+
+
+
+// Mostrar ranking
+
+function mostrarRanking(){
+
+
+let lista =
+document.getElementById("lista");
+
+
+lista.innerHTML="";
+
+
+
+rankingMVP.sort((a,b)=>{
+
+
+return b.mvp - a.mvp;
+
+
+});
+
+
+
+rankingMVP.forEach((j,index)=>{
+
+
+lista.innerHTML += `
+
+
+<div class="jogador">
+
+
+<strong>
+
+${index+1}º 🏆 ${j.nome}
+
+</strong
+
+</script>
+
+</body>
+
+</html>
