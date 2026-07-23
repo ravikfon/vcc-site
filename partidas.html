@@ -45,6 +45,10 @@ margin-top:10px;
 border-radius:5px;
 }
 
+.finalizada{
+background:#d4ffd4;
+}
+
 </style>
 
 </head>
@@ -61,12 +65,9 @@ border-radius:5px;
 
 <input id="time1" placeholder="Equipe 1">
 
-
 <input id="time2" placeholder="Equipe 2">
 
-
 <input id="data" type="date">
-
 
 <input id="hora" type="time">
 
@@ -76,7 +77,7 @@ Adicionar Partida
 </button>
 
 
-<h3>Partidas agendadas:</h3>
+<h3>Partidas:</h3>
 
 
 <div id="lista"></div>
@@ -104,22 +105,53 @@ time2:document.getElementById("time2").value,
 
 data:document.getElementById("data").value,
 
-hora:document.getElementById("hora").value
+hora:document.getElementById("hora").value,
+
+placar1:"",
+placar2:"",
+finalizada:false
 
 };
 
 
-
 partidas.push(partida);
+
+
+localStorage.setItem("partidas",JSON.stringify(partidas));
+
+
+mostrarPartidas();
+
+
+}
+
+
+
+
+function finalizarPartida(index){
+
+
+let p = partidas[index];
+
+
+let placar1 = prompt("Placar da "+p.time1);
+
+let placar2 = prompt("Placar da "+p.time2);
+
+
+
+p.placar1 = placar1;
+
+p.placar2 = placar2;
+
+p.finalizada = true;
 
 
 
 localStorage.setItem("partidas",JSON.stringify(partidas));
 
 
-
 mostrarPartidas();
-
 
 
 }
@@ -140,15 +172,45 @@ lista.innerHTML="";
 partidas.forEach((p,index)=>{
 
 
+let resultado="";
+
+
+if(p.finalizada){
+
+resultado = `
+<br>
+🏆 Resultado: ${p.time1} ${p.placar1} x ${p.placar2} ${p.time2}
+`;
+
+}
+
+
+
 lista.innerHTML += `
 
-<div class="partida">
+<div class="partida ${p.finalizada ? "finalizada":""}">
+
 
 <strong>${p.time1} 🆚 ${p.time2}</strong><br>
 
 📅 ${p.data}<br>
 
 ⏰ ${p.hora}
+
+
+${resultado}
+
+
+${!p.finalizada ? `
+
+<button onclick="finalizarPartida(${index})">
+
+Finalizar partida
+
+</button>
+
+`: ""}
+
 
 </div>
 
