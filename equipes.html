@@ -165,17 +165,19 @@ editando = index;
 
 function excluirEquipe(index){
 
+let confirmar = confirm("Deseja excluir esta equipe?");
+
+if(confirmar){
 
 equipes.splice(index,1);
 
-
 localStorage.setItem("equipes",JSON.stringify(equipes));
-
 
 mostrarEquipes();
 
-
 }
+
+
 
 
 
@@ -206,7 +208,7 @@ Região: ${e.regiao}<br>
 Contato: ${e.contato}<br><br>
 
 
-<button onclick="editarEquipe(${index})">
+<button class="editar" onclick="editarEquipe(${index})">
 
 Editar
 
