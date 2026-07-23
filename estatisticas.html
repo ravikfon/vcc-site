@@ -116,7 +116,7 @@ Salvar Estatística
 
 </button>
 
-
+<button onclick="limparEstatisticas()">🗑️ Limpar Estatísticas</button>
 
 <h3>Desempenho dos jogadores</h3>
 
@@ -338,12 +338,25 @@ ${desempenho}%
 
 }
 
+function limparEstatisticas(){
 
+let confirmar = confirm("Deseja apagar todas as estatísticas?");
+
+if(confirmar){
+
+localStorage.removeItem("estatisticas");
+
+location.reload();
+
+}
+
+}
 
 
 carregarJogadores();
 
 mostrarEstatisticas();
+
 
 
 
