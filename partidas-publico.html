@@ -8,102 +8,69 @@
 
 <title>Partidas VCC</title>
 
-
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-
 body{
-
-margin:0;
-padding:20px;
+font-family:Arial,sans-serif;
 background:#111827;
 color:white;
-
+padding:20px;
 }
-
 
 
 .container{
-
 max-width:900px;
 margin:auto;
 background:#1f2937;
-padding:25px;
+padding:20px;
 border-radius:15px;
-
 }
-
 
 
 h1{
-
 text-align:center;
 color:#60a5fa;
-
 }
-
 
 
 .partida{
-
 background:#374151;
 padding:20px;
-margin-top:20px;
-border-radius:12px;
+margin-top:15px;
+border-radius:10px;
 text-align:center;
-
 }
-
 
 
 .times{
-
 font-size:20px;
 font-weight:bold;
-
 }
-
 
 
 .finalizada{
-
 color:#22c55e;
-margin-top:10px;
-
 }
-
 
 
 .aguardando{
-
 color:#facc15;
-margin-top:10px;
-
 }
 
 
-
 .voltar{
-
 display:block;
+margin-top:20px;
 text-align:center;
-margin-top:25px;
 background:#2563eb;
 padding:12px;
 border-radius:8px;
 color:white;
 text-decoration:none;
-
 }
 
 
 </style>
-
 
 </head>
 
@@ -133,6 +100,8 @@ Carregando partidas...
 
 </div>
 
+
+
 <script>
 
 
@@ -159,15 +128,13 @@ lista.innerHTML = `
 `;
 
 
-}
-
-else{
+}else{
 
 
 lista.innerHTML = "";
 
 
-partidas.forEach((partida,index)=>{
+partidas.forEach((p,index)=>{
 
 
 lista.innerHTML += `
@@ -178,62 +145,74 @@ lista.innerHTML += `
 
 <h3>
 
-🔥 Partida ${index + 1}
+🔥 Partida ${index+1}
 
 </h3>
 
 
 <div class="times">
 
-${partida.time1}
+${p.time1}
 
 🆚
 
-${partida.time2}
+${p.time2}
 
 </div>
 
 
-
-<p>
-
-MD3
-
-</p>
+<br>
 
 
+${p.finalizada ? `
 
-<div class="${partida.finalizada ? "finalizada" : "aguardando"}">
 
-
-${partida.finalizada ?
-
-`
+<div class="finalizada">
 
 🏆 Finalizada
 
 <br><br>
 
 🗺️ Mapas:
-${partida.mapas1} - ${partida.mapas2}
+${p.mapas1} - ${p.mapas2}
 
 <br>
 
 🎯 Rounds:
-${partida.rounds1} - ${partida.rounds2}
-
-`
-
-:
-
-"⏳ Aguardando resultado"}
+${p.rounds1} - ${p.rounds2}
 
 
 </div>
 
 
+` : `
+
+
+<div class="aguardando">
+
+⏳ Aguardando resultado
+
+</div>
+
+
+`}
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
 
 </script>
+
+
 
 </body>
 
