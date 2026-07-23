@@ -115,14 +115,14 @@ let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
 let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
 
 
-let classificacao = [];
+let tabela = [];
 
 
 
 equipes.forEach(e=>{
 
 
-classificacao.push({
+tabela.push({
 
 nome:e.nome,
 
@@ -147,60 +147,54 @@ partidas.forEach(p=>{
 if(p.finalizada){
 
 
-let time1 = classificacao.find(t=>t.nome === p.time1);
+let t1 = tabela.find(t=>t.nome === p.time1);
 
-let time2 = classificacao.find(t=>t.nome === p.time2);
-
-
-
-if(time1 && time2){
-
-
-let placar1 = Number(p.placar1);
-
-let placar2 = Number(p.placar2);
+let t2 = tabela.find(t=>t.nome === p.time2);
 
 
 
-time1.saldo += placar1 - placar2;
-
-time2.saldo += placar2 - placar1;
+if(t1 && t2){
 
 
+let p1 = Number(p.placar1);
 
-if(placar1 > placar2){
+let p2 = Number(p.placar2);
 
 
-time1.vitorias++;
 
-time2.derrotas++;
+t1.saldo += p1 - p2;
 
-time1.pontos += 3;
+t2.saldo += p2 - p1;
 
+
+
+if(p1 > p2){
+
+t1.pontos += 3;
+
+t1.vitorias++;
+
+t2.derrotas++;
 
 }
 
 
-else if(placar2 > placar1){
+else if(p2 > p1){
 
+t2.pontos += 3;
 
-time2.vitorias++;
+t2.vitorias++;
 
-time1.derrotas++;
-
-time2.pontos += 3;
-
+t1.derrotas++;
 
 }
 
 
 else{
 
+t1.pontos++;
 
-time1.pontos++;
-
-time2.pontos++;
-
+t2.pontos++;
 
 }
 
@@ -215,7 +209,7 @@ time2.pontos++;
 
 
 
-classificacao.sort((a,b)=>{
+tabela.sort((a,b)=>{
 
 
 if(b.pontos !== a.pontos)
@@ -235,9 +229,9 @@ return b.saldo-a.saldo;
 
 
 
-if(classificacao.length < 6){
+if(tabela.length < 6){
 
-alert("Cadastre 6 equipes para gerar os playoffs!");
+alert("É necessário ter 6 equipes!");
 
 return;
 
@@ -248,16 +242,16 @@ return;
 playoffs={
 
 
-primeiro:classificacao[0].nome,
+primeiro:tabela[0].nome,
 
-segundo:classificacao[1].nome,
+segundo:tabela[1].nome,
 
 
 playoff1:{
 
-time1:classificacao[2].nome,
+time1:tabela[2].nome,
 
-time2:classificacao[5].nome,
+time2:tabela[5].nome,
 
 vencedor:""
 
@@ -266,9 +260,9 @@ vencedor:""
 
 playoff2:{
 
-time1:classificacao[3].nome,
+time1:tabela[3].nome,
 
-time2:classificacao[4].nome,
+time2:tabela[4].nome,
 
 vencedor:""
 
@@ -277,7 +271,7 @@ vencedor:""
 
 semi:{
 
-time1:"",
+time1:tabela[1].nome,
 
 time2:"",
 
@@ -288,7 +282,7 @@ vencedor:""
 
 final:{
 
-time1:"",
+time1:tabela[0].nome,
 
 time2:"",
 
@@ -302,245 +296,13 @@ vencedor:""
 };
 
 
-
-salvar();
-
-mostrar();
-
-
-}
-
-
-
-
-function definirVencedor(fase){
-
-
-let vencedor = prompt("Digite o nome da equipe vencedora");
-
-
-if(!vencedor)return;
-
-
-
-if(fase==="playoff1"){
-
-playoffs.playoff1.vencedor=vencedor;
-
-}
-
-
-
-if(fase==="playoff2"){
-
-playoffs.playoff2.vencedor=vencedor;
-
-}
-
-
-
-if(
-playoffs.playoff1.vencedor &&
-playoffs.playoff2.vencedor
-){
-
-
-playoffs.semi.time1=playoffs.segundo;
-
-playoffs.semi.time2=playoffs.playoff1.vencedor;
-
-
-}
-
-
-
-if(fase==="semi"){
-
-
-playoffs.semi.vencedor=vencedor;
-
-
-playoffs.final.time1=playoffs.primeiro;
-
-playoffs.final.time2=vencedor;
-
-
-}
-
-
-
-if(fase==="final"){
-
-
-playoffs.final.vencedor=vencedor;
-
-
-}
-
-
-
-salvar();
-
-mostrar();
-
-
-}
-
-
-
-
-function salvar(){
-
-
 localStorage.setItem(
-
 "playoffs",
-
 JSON.stringify(playoffs)
-
 );
 
 
-}
-
-
-
-
-
-function mostrar(){
-
-
-let div=document.getElementById("chave");
-
-
-if(!div)return;
-
-
-div.innerHTML="";
-
-
-
-if(!playoffs.playoff1)return;
-
-
-
-div.innerHTML += `
-
-
-<div class="jogo">
-
-<h3>🔥 Playoff 1</h3>
-
-${playoffs.playoff1.time1}
-
-🆚
-
-${playoffs.playoff1.time2}
-
-
-<button onclick="definirVencedor('playoff1')">
-
-Definir vencedor
-
-</button>
-
-</div>
-
-
-
-<div class="jogo">
-
-<h3>🔥 Playoff 2</h3>
-
-${playoffs.playoff2.time1}
-
-🆚
-
-${playoffs.playoff2.time2}
-
-
-<button onclick="definirVencedor('playoff2')">
-
-Definir vencedor
-
-</button>
-
-</div>
-
-
-
-<div class="jogo vencedor">
-
-<h3>⚔️ Semifinal</h3>
-
-
-${playoffs.semi.time1 || "Aguardando"}
-
-🆚
-
-${playoffs.semi.time2 || "Aguardando"}
-
-
-<button onclick="definirVencedor('semi')">
-
-Definir vencedor
-
-</button>
-
-</div>
-
-
-
-<div class="jogo final">
-
-<h3>🏆 FINAL VCC - MD5</h3>
-
-
-${playoffs.final.time1 || "Aguardando"}
-
-🆚
-
-${playoffs.final.time2 || "Aguardando"}
-
-
-<button onclick="definirVencedor('final')">
-
-Definir campeão
-
-</button>
-
-</div>
-
-
-`;
-
-
-
-if(playoffs.final.vencedor){
-
-
-div.innerHTML += `
-
-<div class="jogo campeao">
-
-🏆 CAMPEÃO VCC
-
-<br>
-
-${playoffs.final.vencedor}
-
-</div>
-
-`;
-
-}
-
-
-}
-
-
-
 mostrar();
 
 
-</script>
+}
