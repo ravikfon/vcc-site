@@ -227,11 +227,14 @@ Carregando classificação...
 <h2>🌳 Playoffs</h2>
 
 
-<p>
+<div id="resumoPlayoffs">
 
-Veja a chave dos playoffs e acompanhe a disputa pelo título.
+Carregando playoffs...
 
-</p>
+</div>
+
+
+<br>
 
 
 <a class="botao" href="playoffs-publico.html">
@@ -322,9 +325,83 @@ lista.innerHTML += `
 }
 
 
-</script>
+<script>
 
-<script src="script.js"></script>
+
+let playoffs =
+JSON.parse(localStorage.getItem("playoffs")) || {};
+
+
+let resumo =
+document.getElementById("resumoPlayoffs");
+
+
+
+if(!playoffs.playoff1){
+
+
+resumo.innerHTML =
+"Playoffs ainda não gerados.";
+
+}
+
+else{
+
+
+resumo.innerHTML = `
+
+
+<p>
+🔥 Playoff 1
+<br>
+${playoffs.playoff1.time1}
+🆚
+${playoffs.playoff1.time2}
+</p>
+
+
+<p>
+🔥 Playoff 2
+<br>
+${playoffs.playoff2.time1}
+🆚
+${playoffs.playoff2.time2}
+</p>
+
+
+<p>
+🔥 Playoff 3
+<br>
+${playoffs.playoff3.time1 || "Aguardando"}
+🆚
+${playoffs.playoff3.time2 || "Aguardando"}
+</p>
+
+
+<p>
+⚔️ Semifinal
+<br>
+${playoffs.semi.time1}
+🆚
+${playoffs.semi.time2 || "Aguardando"}
+</p>
+
+
+<p>
+🏆 Final MD5
+<br>
+${playoffs.final.time1}
+🆚
+${playoffs.final.time2 || "Aguardando"}
+</p>
+
+
+`;
+
+}
+
+
+</script>
 
 
 </body>

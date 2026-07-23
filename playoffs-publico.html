@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Playoffs VCC</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+
+body{
+
+margin:0;
+padding:20px;
+background:#111827;
+color:white;
+
+}
+
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+
+h1{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+
+.fase{
+
+background:#374151;
+padding:20px;
+margin-top:20px;
+border-radius:12px;
+text-align:center;
+
+}
+
+
+
+.titulo{
+
+font-size:20px;
+color:#93c5fd;
+margin-bottom:15px;
+
+}
+
+
+
+.time{
+
+font-size:18px;
+font-weight:bold;
+
+}
+
+
+
+.voltar{
+
+display:block;
+text-align:center;
+margin-top:25px;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>🌳 Playoffs VCC</h1>
+
+
+<div id="chave">
+
+
+Carregando playoffs...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+<script>
+
+
+let playoffs =
+JSON.parse(localStorage.getItem("playoffs")) || {};
+
+
+
+let chave =
+document.getElementById("chave");
+
+
+
+if(!playoffs.playoff1){
+
+
+chave.innerHTML = `
+
+<p>
+
+Nenhum playoff gerado ainda.
+
+</p>
+
+`;
+
+}
+
+else{
+
+
+chave.innerHTML = `
+
+
+<div class="fase">
+
+<div class="titulo">
+
+🔥 Playoff 1
+
+</div>
+
+
+<div class="time">
+
+${playoffs.playoff1.time1}
+
+🆚
+
+${playoffs.playoff1.time2}
+
+</div>
+
+</div>
+
+
+
+<div class="fase">
+
+<div class="titulo">
+
+🔥 Playoff 2
+
+</div>
+
+
+<div class="time">
+
+${playoffs.playoff2.time1}
+
+🆚
+
+${playoffs.playoff2.time2}
+
+</div>
+
+</div>
+
+
+
+<div class="fase">
+
+<div class="titulo">
+
+🔥 Playoff 3
+
+</div>
+
+
+<div class="time">
+
+${playoffs.playoff3.time1 || "Aguardando"}
+
+🆚
+
+${playoffs.playoff3.time2 || "Aguardando"}
+
+</div>
+
+</div>
+
+
+
+<div class="fase">
+
+<div class="titulo">
+
+⚔️ Semifinal
+
+</div>
+
+
+<div class="time">
+
+${playoffs.semi.time1}
+
+🆚
+
+${playoffs.semi.time2 || "Aguardando"}
+
+</div>
+
+</div>
+
+
+
+<div class="fase">
+
+<div class="titulo">
+
+🏆 Final MD5
+
+</div>
+
+
+<div class="time">
+
+${playoffs.final.time1}
+
+🆚
+
+${playoffs.final.time2 || "Aguardando"}
+
+</div>
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+</script>
+<script>
+
+
+if(playoffs.final && playoffs.final.vencedor){
+
+
+chave.innerHTML += `
+
+
+<div class="fase" style="background:#f59e0b;color:#111;">
+
+
+<div class="titulo">
+
+🏆 CAMPEÃO VCC
+
+</div>
+
+
+<div class="time">
+
+${playoffs.final.vencedor}
+
+</div>
+
+
+</div>
+
+
+`;
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
