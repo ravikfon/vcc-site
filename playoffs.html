@@ -113,123 +113,10 @@ function gerarPlayoffs(){
 let tabela = JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
 
 
-let tabela = [];
-
-
-
-equipes.forEach(e=>{
-
-
-tabela.push({
-
-nome:e.nome,
-
-pontos:0,
-
-vitorias:0,
-
-derrotas:0,
-
-saldo:0
-
-});
-
-
-});
-
-
-
-partidas.forEach(p=>{
-
-
-if(p.finalizada){
-
-
-let t1 = tabela.find(t=>t.nome === p.time1);
-
-let t2 = tabela.find(t=>t.nome === p.time2);
-
-
-
-if(t1 && t2){
-
-
-let p1 = Number(p.placar1);
-
-let p2 = Number(p.placar2);
-
-
-
-t1.saldo += p1 - p2;
-
-t2.saldo += p2 - p1;
-
-
-
-if(p1 > p2){
-
-t1.pontos += 3;
-
-t1.vitorias++;
-
-t2.derrotas++;
-
-}
-
-
-else if(p2 > p1){
-
-t2.pontos += 3;
-
-t2.vitorias++;
-
-t1.derrotas++;
-
-}
-
-
-else{
-
-t1.pontos++;
-
-t2.pontos++;
-
-}
-
-
-}
-
-
-}
-
-
-});
-
-
-
-tabela.sort((a,b)=>{
-
-
-if(b.pontos !== a.pontos)
-
-return b.pontos-a.pontos;
-
-
-if(b.vitorias !== a.vitorias)
-
-return b.vitorias-a.vitorias;
-
-
-return b.saldo-a.saldo;
-
-
-});
-
-
 
 if(tabela.length < 6){
 
-alert("É necessário ter 6 equipes!");
+alert("Abra primeiro a classificação para gerar a tabela!");
 
 return;
 
@@ -237,12 +124,13 @@ return;
 
 
 
-playoffs={
+playoffs = {
 
 
-primeiro:tabela[0].nome,
+primeiro: tabela[0].nome,
 
-segundo:tabela[1].nome,
+segundo: tabela[1].nome,
+
 
 
 playoff1:{
@@ -256,6 +144,7 @@ vencedor:""
 },
 
 
+
 playoff2:{
 
 time1:tabela[3].nome,
@@ -267,6 +156,19 @@ vencedor:""
 },
 
 
+
+playoff3:{
+
+time1:"",
+
+time2:"",
+
+vencedor:""
+
+},
+
+
+
 semi:{
 
 time1:tabela[1].nome,
@@ -276,6 +178,7 @@ time2:"",
 vencedor:""
 
 },
+
 
 
 final:{
@@ -294,13 +197,28 @@ vencedor:""
 };
 
 
-localStorage.setItem(
-"playoffs",
-JSON.stringify(playoffs)
-);
 
+salvar();
 
 mostrar();
+
+
+}
+
+
+
+
+
+function salvar(){
+
+
+localStorage.setItem(
+
+"playoffs",
+
+JSON.stringify(playoffs)
+
+);
 
 
 }
@@ -316,7 +234,7 @@ if(!vencedor)return;
 
 if(fase==="playoff1"){
 
-playoffs.playoff1.vencedor=vencedor;
+playoffs.playoff1.vencedor = vencedor;
 
 }
 
@@ -324,39 +242,53 @@ playoffs.playoff1.vencedor=vencedor;
 
 if(fase==="playoff2"){
 
-playoffs.playoff2.vencedor=vencedor;
+playoffs.playoff2.vencedor = vencedor;
 
 }
 
 
+
+// Criar Playoff 3 quando os dois anteriores terminarem
 
 if(
 playoffs.playoff1.vencedor &&
 playoffs.playoff2.vencedor
 ){
 
-playoffs.semi.time2 = playoffs.playoff1.vencedor;
+playoffs.playoff3.time1 = playoffs.playoff1.vencedor;
 
-playoffs.semi.time2 = 
-playoffs.playoff1.vencedor + " / " + playoffs.playoff2.vencedor;
+playoffs.playoff3.time2 = playoffs.playoff2.vencedor;
 
 }
+
+
+
+
+if(fase==="playoff3"){
+
+playoffs.playoff3.vencedor = vencedor;
+
+playoffs.semi.time2 = vencedor;
+
+}
+
 
 
 
 if(fase==="semi"){
 
-playoffs.semi.vencedor=vencedor;
+playoffs.semi.vencedor = vencedor;
 
-playoffs.final.time2=vencedor;
+playoffs.final.time2 = vencedor;
 
 }
 
 
 
+
 if(fase==="final"){
 
-playoffs.final.vencedor=vencedor;
+playoffs.final.vencedor = vencedor;
 
 }
 
@@ -372,29 +304,17 @@ mostrar();
 
 
 
-function salvar(){
-
-localStorage.setItem(
-"playoffs",
-JSON.stringify(playoffs)
-);
-
-}
-
-
-
-
 
 function mostrar(){
 
 
-let div=document.getElementById("chave");
+let div = document.getElementById("chave");
 
 
 if(!div)return;
 
 
-div.innerHTML="";
+div.innerHTML = "";
 
 
 
@@ -447,10 +367,30 @@ Definir vencedor
 
 
 
+<div class="jogo">
+
+<h3>🔥 Playoff 3</h3>
+
+${playoffs.playoff3.time1 || "Aguardando"}
+
+🆚
+
+${playoffs.playoff3.time2 || "Aguardando"}
+
+
+<button onclick="definirVencedor('playoff3')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
 <div class="jogo vencedor">
 
 <h3>⚔️ Semifinal</h3>
-
 
 ${playoffs.semi.time1}
 
@@ -473,7 +413,6 @@ Definir vencedor
 
 <h3>🏆 FINAL MD5</h3>
 
-
 ${playoffs.final.time1}
 
 🆚
@@ -491,6 +430,7 @@ Definir campeão
 
 
 `;
+
 
 
 if(playoffs.final.vencedor){
