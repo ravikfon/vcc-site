@@ -102,6 +102,8 @@ margin-left:0;
 
 <button onclick="abrirPartidas()">Partidas</button>
 
+<button onclick="abrirPlayoffs()">🏆 Playoffs</button>
+
 <button>Configurações</button>
 
 <button onclick="sair()">Sair</button>
@@ -159,11 +161,13 @@ window.location="usuarios.html";
 
 }
 
+
 function abrirEquipes(){
 
 window.location="equipes.html";
 
 }
+
 
 function abrirClassificacao(){
 
@@ -171,11 +175,21 @@ window.location="classificacao.html";
 
 }
 
+
 function abrirPartidas(){
 
 window.location="partidas.html";
 
 }
+
+
+function abrirPlayoffs(){
+
+window.location="playoffs.html";
+
+}
+
+
 
 let listaUsuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
