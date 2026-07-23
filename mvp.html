@@ -306,13 +306,17 @@ ${index+1}º 🏆 ${j.nome}
 
 function limparMVP(){
 
-let confirmar = confirm("Deseja apagar o ranking MVP?");
+let confirmar = confirm("Deseja apagar todo o Ranking MVP?");
 
 if(confirmar){
 
-localStorage.removeItem("mvp");
+localStorage.removeItem("rankingMVP");
 
-location.reload();
+rankingMVP = [];
+
+mostrarRanking();
+
+alert("Ranking MVP apagado com sucesso.");
 
 }
 
