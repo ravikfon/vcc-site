@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Classificação VCC</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f1f1f1;
+padding:20px;
+}
+
+.container{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:700px;
+margin:auto;
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0066ff;
+color:white;
+border:none;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ccc;
+text-align:center;
+}
+
+th{
+background:#111;
+color:white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+<h2>🏆 Classificação VCC</h2>
+
+
+<input id="nome" placeholder="Nome da equipe">
+
+<input id="vitorias" type="number" placeholder="Vitórias">
+
+<input id="derrotas" type="number" placeholder="Derrotas">
+
+
+<button onclick="adicionar()">Adicionar equipe</button>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Pos</th>
+<th>Equipe</th>
+<th>Vitórias</th>
+<th>Derrotas</th>
+<th>Pontos</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tabela"></tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+<script>
+
+
+let classificacao = JSON.parse(localStorage.getItem("classificacao")) || [];
+
+
+
+function adicionar(){
+
+
+let equipe={
+
+nome:document.getElementById("nome").value,
+
+vitorias:Number(document.getElementById("vitorias").value),
+
+derrotas:Number(document.getElementById("derrotas").value)
+
+};
+
+
+equipe.pontos = equipe.vitorias * 3;
+
+
+classificacao.push(equipe);
+
+
+localStorage.setItem("classificacao",JSON.stringify(classificacao));
+
+
+mostrar();
+
+
+}
+
+
+
+
+function mostrar(){
+
+
+let tabela=document.getElementById("tabela");
+
+
+tabela.innerHTML="";
+
+
+classificacao.sort((a,b)=>b.pontos-a.pontos);
+
+
+
+classificacao.forEach((e,index)=>{
+
+
+tabela.innerHTML += `
+
+<tr>
+
+<td>${index+1}º</td>
+
+<td>${e.nome}</td>
+
+<td>${e.vitorias}</td>
+
+<td>${e.derrotas}</td>
+
+<td>${e.pontos}</td>
+
+</tr>
+
+`;
+
+});
+
+
+}
+
+
+
+mostrar();
+
+
+</script>
+
+
+</body>
+
+</html>
