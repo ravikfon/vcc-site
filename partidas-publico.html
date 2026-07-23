@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Partidas VCC</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+
+body{
+
+margin:0;
+padding:20px;
+background:#111827;
+color:white;
+
+}
+
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+
+h1{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+
+.partida{
+
+background:#374151;
+padding:20px;
+margin-top:20px;
+border-radius:12px;
+text-align:center;
+
+}
+
+
+
+.times{
+
+font-size:20px;
+font-weight:bold;
+
+}
+
+
+
+.finalizada{
+
+color:#22c55e;
+margin-top:10px;
+
+}
+
+
+
+.aguardando{
+
+color:#facc15;
+margin-top:10px;
+
+}
+
+
+
+.voltar{
+
+display:block;
+text-align:center;
+margin-top:25px;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>🎮 Partidas VCC</h1>
+
+
+<div id="listaPartidas">
+
+Carregando partidas...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+
+<script>
+
+
+let partidas =
+JSON.parse(localStorage.getItem("partidas")) || [];
+
+
+let lista =
+document.getElementById("listaPartidas");
+
+
+
+if(partidas.length === 0){
+
+
+lista.innerHTML = `
+
+<p>
+
+🎮 Nenhuma partida cadastrada.
+
+</p>
+
+`;
+
+
+}
+
+else{
+
+
+lista.innerHTML = "";
+
+
+partidas.forEach((partida,index)=>{
+
+
+lista.innerHTML += `
+
+
+<div class="partida">
+
+
+<h3>
+
+🔥 Partida ${index + 1}
+
+</h3>
+
+
+<div class="times">
+
+${partida.time1}
+
+🆚
+
+${partida.time2}
+
+</div>
+
+
+
+<p>
+
+MD3
+
+</p>
+
+
+
+<div class="${partida.finalizada ? "finalizada" : "aguardando"}">
+
+
+${partida.finalizada ?
+
+`
+
+🏆 Finalizada
+
+<br><br>
+
+🗺️ Mapas:
+${partida.mapas1} - ${partida.mapas2}
+
+<br>
+
+🎯 Rounds:
+${partida.rounds1} - ${partida.rounds2}
+
+`
+
+:
+
+"⏳ Aguardando resultado"}
+
+
+</div>
+
+
+
+</script>
+
+</body>
+
+</html>
