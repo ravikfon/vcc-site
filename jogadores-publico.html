@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jogadores VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+padding:20px;
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+h1{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+.equipe{
+
+background:#374151;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+
+}
+
+
+.jogador{
+
+background:#1f2937;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+
+}
+
+
+.voltar{
+
+display:block;
+margin-top:25px;
+text-align:center;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>👤 Jogadores VCC</h1>
+
+
+<div id="listaJogadores">
+
+Carregando jogadores...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+<script>
+
+
+let jogadores =
+JSON.parse(localStorage.getItem("jogadores")) || [];
+
+
+let lista =
+document.getElementById("listaJogadores");
+
+
+
+if(jogadores.length === 0){
+
+
+lista.innerHTML = `
+
+<p>
+
+👤 Nenhum jogador cadastrado.
+
+</p>
+
+`;
+
+
+}else{
+
+
+lista.innerHTML = "";
+
+
+
+// Agrupar por equipe
+
+let equipes = {};
+
+
+
+jogadores.forEach(j=>{
+
+
+if(!equipes[j.equipe]){
+
+equipes[j.equipe] = [];
+
+}
+
+
+equipes[j.equipe].push(j);
+
+
+});
+
+
+
+
+
+for(let equipe in equipes){
+
+
+lista.innerHTML += `
+
+
+<div class="equipe">
+
+
+<h2>
+
+🏆 ${equipe}
+
+</h2>
+
+
+</div>
+
+
+`;
+
+
+
+equipes[equipe].forEach(jogador=>{
+
+
+lista.innerHTML += `
+
+
+<div class="jogador">
+
+
+👤 ${jogador.nome}
+
+<br>
+
+🎮 ${jogador.nick}
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+}
+
+
+
+</script>
+
+</script>
+
+</body>
+
+</html>
