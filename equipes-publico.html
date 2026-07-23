@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Equipes VCC</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+padding:20px;
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+h1{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+.equipe{
+
+background:#374151;
+padding:20px;
+margin-top:15px;
+border-radius:10px;
+text-align:center;
+
+}
+
+
+.nome{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+
+.voltar{
+
+display:block;
+margin-top:25px;
+text-align:center;
+background:#2563eb;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>👥 Equipes VCC</h1>
+
+
+<div id="listaEquipes">
+
+Carregando equipes...
+
+</div>
+
+
+<a class="voltar" href="index.html">
+
+⬅ Voltar ao início
+
+</a>
+
+
+</div>
+<script>
+
+
+let equipes =
+JSON.parse(localStorage.getItem("equipes")) || [];
+
+
+let lista =
+document.getElementById("listaEquipes");
+
+
+
+if(equipes.length === 0){
+
+
+lista.innerHTML = `
+
+<p>
+
+👥 Nenhuma equipe cadastrada.
+
+</p>
+
+`;
+
+
+}else{
+
+
+lista.innerHTML = "";
+
+
+equipes.forEach((equipe,index)=>{
+
+
+let dados =
+JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
+
+
+let stats =
+dados.find(t=>t.nome === equipe.nome);
+
+
+
+lista.innerHTML += `
+
+
+<div class="equipe">
+
+
+<div class="nome">
+
+🏆 ${equipe.nome}
+
+</div>
+
+
+<br>
+
+
+<p>
+
+🎮 Jogos:
+${stats ? stats.jogos : 0}
+
+</p>
+
+
+<p>
+
+✅ Vitórias:
+${stats ? stats.vitorias : 0}
+
+</p>
+
+
+<p>
+
+❌ Derrotas:
+${stats ? stats.derrotas : 0}
+
+</p>
+
+
+<p>
+
+🏆 Pontos:
+${stats ? stats.pontos : 0}
+
+</p>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+</script>
