@@ -56,26 +56,11 @@ button{
 </div>
 
 
-<script>
+<p id="msg"></p>
 
-function entrar(){
+</div>
 
-let usuario = document.getElementById("usuario").value;
-let senha = document.getElementById("senha").value;
-
-if(usuario=="admin" && senha=="1234"){
-
-window.location="painel.html";
-
-}else{
-
-document.getElementById("msg").innerHTML="Login incorreto";
-
-}
-
-}
-
-</script>
+<script src="login.js"></script>
 
 </body>
 </html>
