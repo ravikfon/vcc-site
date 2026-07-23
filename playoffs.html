@@ -11,7 +11,7 @@
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#f1f1f1;
 padding:20px;
 }
@@ -20,16 +20,60 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
+max-width:900px;
+margin:auto;
 }
 
+h2,h3{
+text-align:center;
+}
+
+
 button{
+
 width:100%;
 padding:12px;
+margin:8px 0;
 background:#0066ff;
 color:white;
 border:none;
 border-radius:5px;
+
 }
+
+
+.chave{
+
+display:flex;
+flex-direction:column;
+gap:15px;
+
+}
+
+
+.jogo{
+
+background:#eee;
+padding:15px;
+border-radius:8px;
+
+}
+
+
+.final{
+
+background:#fff3cd;
+
+}
+
+
+.vencedor{
+
+background:#d4ffd4;
+font-weight:bold;
+
+}
+
 
 </style>
 
@@ -38,19 +82,305 @@ border-radius:5px;
 
 <body>
 
+
 <div class="container">
 
-<h1>TESTE VCC</h1>
 
 <h2>🏆 Playoffs VCC</h2>
 
-<p>Sistema de Playoffs carregado.</p>
+
+<button onclick="gerarPlayoffs()">
+
+Gerar Playoffs
 
 </button>
-Gerar Playoffs
-</button>
+
+
+<div id="chave" class="chave"></div>
+
 
 </div>
+
+
+<script>
+
+
+let playoffs = JSON.parse(localStorage.getItem("playoffs")) || null;
+
+
+let classificacao = JSON.parse(localStorage.getItem("classificacao")) || [];
+
+
+function gerarPlayoffs(){
+
+
+let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
+let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
+
+
+
+// Criar classificação simples pelo desempenho
+
+let tabela = [];
+
+
+
+equipes.forEach(e=>{
+
+tabela.push({
+
+nome:e.nome,
+
+pontos:0
+
+});
+
+});
+
+
+
+partidas.forEach(p=>{
+
+
+if(p.finalizada){
+
+
+let t1 = tabela.find(t=>t.nome === p.time1);
+
+let t2 = tabela.find(t=>t.nome === p.time2);
+
+
+
+if(t1 && t2){
+
+
+if(Number(p.mapas1) > Number(p.mapas2)){
+
+t1.pontos += 3;
+
+}
+
+else{
+
+t2.pontos += 3;
+
+}
+
+
+}
+
+
+}
+
+
+});
+
+
+
+tabela.sort((a,b)=>b.pontos-a.pontos);
+
+
+
+playoffs = {
+
+
+primeiro:tabela[0]?.nome,
+
+
+segundo:tabela[1]?.nome,
+
+
+jogo1:{
+
+time1:tabela[2]?.nome,
+
+time2:tabela[5]?.nome,
+
+vencedor:""
+
+},
+
+
+jogo2:{
+
+time1:tabela[3]?.nome,
+
+time2:tabela[4]?.nome,
+
+vencedor:""
+
+},
+
+
+semi:"",
+
+
+final:{
+
+time1:"",
+
+time2:"",
+
+formato:"MD5",
+
+vencedor:""
+
+}
+
+
+};
+
+
+
+localStorage.setItem(
+
+"playoffs",
+
+JSON.stringify(playoffs)
+
+);
+
+
+
+mostrarPlayoffs();
+
+
+}
+
+
+
+
+function escolherVencedor(jogo){
+
+
+let vencedor = prompt(
+
+"Digite o nome da equipe vencedora"
+
+);
+
+
+
+if(vencedor){
+
+
+jogo.vencedor = vencedor;
+
+
+}
+
+
+
+localStorage.setItem(
+
+"playoffs",
+
+JSON.stringify(playoffs)
+
+);
+
+
+
+mostrarPlayoffs();
+
+
+}
+
+
+
+
+function mostrarPlayoffs(){
+
+
+let div = document.getElementById("chave");
+
+
+div.innerHTML="";
+
+
+
+if(!playoffs){
+
+return;
+
+}
+
+
+
+div.innerHTML += `
+
+<div class="jogo">
+
+<h3>🔥 Playoffs</h3>
+
+<p>
+
+${playoffs.jogo1.time1}
+
+🆚
+
+${playoffs.jogo1.time2}
+
+</p>
+
+<button onclick="escolherVencedor(playoffs.jogo1)">
+
+Definir vencedor
+
+</button>
+
+${playoffs.jogo1.vencedor ?
+
+"<p class='vencedor'>✅ "+playoffs.jogo1.vencedor+"</p>"
+
+:""}
+
+</div>
+
+
+
+<div class="jogo">
+
+<p>
+
+${playoffs.jogo2.time1}
+
+🆚
+
+${playoffs.jogo2.time2}
+
+</p>
+
+<button onclick="escolherVencedor(playoffs.jogo2)">
+
+Definir vencedor
+
+</button>
+
+
+${playoffs.jogo2.vencedor ?
+
+"<p class='vencedor'>✅ "+playoffs.jogo2.vencedor+"</p>"
+
+:""}
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+mostrarPlayoffs();
+
+
+</script>
+
 
 </body>
 
