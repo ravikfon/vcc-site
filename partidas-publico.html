@@ -104,7 +104,6 @@ Carregando partidas...
 
 <script>
 
-
 let partidas =
 JSON.parse(localStorage.getItem("partidas")) || [];
 
@@ -116,17 +115,9 @@ document.getElementById("listaPartidas");
 
 if(partidas.length === 0){
 
-
 lista.innerHTML = `
-
-<p>
-
-🎮 Nenhuma partida cadastrada.
-
-</p>
-
+<p>🎮 Nenhuma partida cadastrada.</p>
 `;
-
 
 }else{
 
@@ -145,7 +136,7 @@ lista.innerHTML += `
 
 <h3>
 
-🔥 Partida ${index+1}
+🔥 Série MD3 #${index + 1}
 
 </h3>
 
@@ -164,22 +155,53 @@ ${p.time2}
 <br>
 
 
+📅 ${p.data || "Data não definida"}
+
+<br>
+
+⏰ ${p.hora || "Horário não definido"}
+
+
+
 ${p.finalizada ? `
 
 
 <div class="finalizada">
 
-🏆 Finalizada
-
-<br><br>
-
-🗺️ Mapas:
-${p.mapas1} - ${p.mapas2}
 
 <br>
 
+🏆 Série Finalizada
+
+
+<br><br>
+
+
+Placar:
+
+<br>
+
+${p.time1} ${p.mapas1} x ${p.mapas2} ${p.time2}
+
+
+<br><br>
+
+
 🎯 Rounds:
-${p.rounds1} - ${p.rounds2}
+
+<br>
+
+${p.rounds1} x ${p.rounds2}
+
+
+<br><br>
+
+
+👑 Vencedor:
+
+<br>
+
+${p.vencedor}
 
 
 </div>
@@ -189,6 +211,8 @@ ${p.rounds1} - ${p.rounds2}
 
 
 <div class="aguardando">
+
+<br>
 
 ⏳ Aguardando resultado
 
@@ -211,7 +235,6 @@ ${p.rounds1} - ${p.rounds2}
 
 
 </script>
-
 
 
 </body>
