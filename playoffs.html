@@ -109,12 +109,135 @@ let playoffs = JSON.parse(localStorage.getItem("playoffs")) || {};
 
 function gerarPlayoffs(){
 
-let classificacao = JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
+
+let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+
+let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
+
+
+let classificacao = [];
+
+
+
+equipes.forEach(e=>{
+
+
+classificacao.push({
+
+nome:e.nome,
+
+pontos:0,
+
+vitorias:0,
+
+derrotas:0,
+
+saldo:0
+
+});
+
+
+});
+
+
+
+partidas.forEach(p=>{
+
+
+if(p.finalizada){
+
+
+let time1 = classificacao.find(t=>t.nome === p.time1);
+
+let time2 = classificacao.find(t=>t.nome === p.time2);
+
+
+
+if(time1 && time2){
+
+
+let placar1 = Number(p.placar1);
+
+let placar2 = Number(p.placar2);
+
+
+
+time1.saldo += placar1 - placar2;
+
+time2.saldo += placar2 - placar1;
+
+
+
+if(placar1 > placar2){
+
+
+time1.vitorias++;
+
+time2.derrotas++;
+
+time1.pontos += 3;
+
+
+}
+
+
+else if(placar2 > placar1){
+
+
+time2.vitorias++;
+
+time1.derrotas++;
+
+time2.pontos += 3;
+
+
+}
+
+
+else{
+
+
+time1.pontos++;
+
+time2.pontos++;
+
+
+}
+
+
+}
+
+
+}
+
+
+});
+
+
+
+classificacao.sort((a,b)=>{
+
+
+if(b.pontos !== a.pontos)
+
+return b.pontos-a.pontos;
+
+
+if(b.vitorias !== a.vitorias)
+
+return b.vitorias-a.vitorias;
+
+
+return b.saldo-a.saldo;
+
+
+});
+
 
 
 if(classificacao.length < 6){
 
-alert("É necessário ter 6 equipes classificadas!");
+alert("Cadastre 6 equipes para gerar os playoffs!");
 
 return;
 
@@ -122,18 +245,19 @@ return;
 
 
 
-playoffs = {
+playoffs={
 
-primeiro: classificacao[0].nome,
 
-segundo: classificacao[1].nome,
+primeiro:classificacao[0].nome,
+
+segundo:classificacao[1].nome,
 
 
 playoff1:{
 
-time1: classificacao[2].nome,
+time1:classificacao[2].nome,
 
-time2: classificacao[5].nome,
+time2:classificacao[5].nome,
 
 vencedor:""
 
@@ -142,9 +266,9 @@ vencedor:""
 
 playoff2:{
 
-time1: classificacao[3].nome,
+time1:classificacao[3].nome,
 
-time2: classificacao[4].nome,
+time2:classificacao[4].nome,
 
 vencedor:""
 
@@ -178,9 +302,11 @@ vencedor:""
 };
 
 
+
 salvar();
 
 mostrar();
+
 
 }
 
@@ -204,6 +330,7 @@ playoffs.playoff1.vencedor=vencedor;
 }
 
 
+
 if(fase==="playoff2"){
 
 playoffs.playoff2.vencedor=vencedor;
@@ -211,21 +338,24 @@ playoffs.playoff2.vencedor=vencedor;
 }
 
 
+
 if(
 playoffs.playoff1.vencedor &&
 playoffs.playoff2.vencedor
 ){
 
+
 playoffs.semi.time1=playoffs.segundo;
 
-playoffs.semi.time2=
-playoffs.playoff1.vencedor;
+playoffs.semi.time2=playoffs.playoff1.vencedor;
 
 
 }
 
 
+
 if(fase==="semi"){
+
 
 playoffs.semi.vencedor=vencedor;
 
@@ -234,19 +364,25 @@ playoffs.final.time1=playoffs.primeiro;
 
 playoffs.final.time2=vencedor;
 
+
 }
+
 
 
 if(fase==="final"){
 
+
 playoffs.final.vencedor=vencedor;
 
+
 }
+
 
 
 salvar();
 
 mostrar();
+
 
 }
 
@@ -255,12 +391,18 @@ mostrar();
 
 function salvar(){
 
+
 localStorage.setItem(
+
 "playoffs",
+
 JSON.stringify(playoffs)
+
 );
 
+
 }
+
 
 
 
@@ -271,7 +413,11 @@ function mostrar(){
 let div=document.getElementById("chave");
 
 
+if(!div)return;
+
+
 div.innerHTML="";
+
 
 
 if(!playoffs.playoff1)return;
@@ -283,7 +429,7 @@ div.innerHTML += `
 
 <div class="jogo">
 
-<h3>Playoff 1</h3>
+<h3>🔥 Playoff 1</h3>
 
 ${playoffs.playoff1.time1}
 
@@ -298,14 +444,13 @@ Definir vencedor
 
 </button>
 
-
 </div>
 
 
 
 <div class="jogo">
 
-<h3>Playoff 2</h3>
+<h3>🔥 Playoff 2</h3>
 
 ${playoffs.playoff2.time1}
 
@@ -320,16 +465,82 @@ Definir vencedor
 
 </button>
 
-
 </div>
 
 
 
 <div class="jogo vencedor">
 
-<h3>Semifinal</h3>
+<h3>⚔️ Semifinal</h3>
 
 
 ${playoffs.semi.time1 || "Aguardando"}
 
 🆚
+
+${playoffs.semi.time2 || "Aguardando"}
+
+
+<button onclick="definirVencedor('semi')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo final">
+
+<h3>🏆 FINAL VCC - MD5</h3>
+
+
+${playoffs.final.time1 || "Aguardando"}
+
+🆚
+
+${playoffs.final.time2 || "Aguardando"}
+
+
+<button onclick="definirVencedor('final')">
+
+Definir campeão
+
+</button>
+
+</div>
+
+
+`;
+
+
+
+if(playoffs.final.vencedor){
+
+
+div.innerHTML += `
+
+<div class="jogo campeao">
+
+🏆 CAMPEÃO VCC
+
+<br>
+
+${playoffs.final.vencedor}
+
+</div>
+
+`;
+
+}
+
+
+}
+
+
+
+mostrar();
+
+
+</script>
