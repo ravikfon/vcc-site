@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Classificação VCC</title>
+<title>Partidas VCC</title>
 
 <style>
 
@@ -20,32 +20,66 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:1000px;
+max-width:700px;
 margin:auto;
 }
 
-table{
+select,
+input,
+button{
+
 width:100%;
-border-collapse:collapse;
-margin-top:20px;
+padding:12px;
+margin:8px 0;
+border-radius:5px;
+border:1px solid #ccc;
+
 }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #ccc;
-text-align:center;
-}
+button{
 
-th{
-background:#111;
+background:#0066ff;
 color:white;
+border:none;
+cursor:pointer;
+
 }
 
-.lider{
-background:#fff3cd;
-font-weight:bold;
+.partida{
+
+background:#eee;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+
 }
 
+.finalizada{
+
+background:#d4ffd4;
+
+}
+
+.excluir{
+
+background:red;
+
+}
+
+.editar{
+
+background:#009900;
+
+}
+
+.resultado{
+
+margin-top:10px;
+padding:10px;
+background:white;
+border-radius:5px;
+
+}
 
 </style>
 
@@ -58,254 +92,372 @@ font-weight:bold;
 <div class="container">
 
 
-<h2>🏆 Classificação VCC</h2>
+<h2>🎮 Agenda de Partidas VCC</h2>
 
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>Pos</th>
-
-<th>Equipe</th>
-
-<th>Jogos</th>
-
-<th>Vitórias</th>
-
-<th>Derrotas</th>
-
-<th>Mapas</th>
-
-<th>Rounds</th>
-
-<th>Saldo</th>
-
-<th>Pontos</th>
-
-</tr>
-
-</thead>
+<h3>Nova Série MD3</h3>
 
 
-<tbody id="tabela"></tbody>
+<label>Equipe 1</label>
+
+<select id="time1"></select>
 
 
-</table>
+<label>Equipe 2</label>
+
+<select id="time2"></select>
+
+
+
+<input id="data" type="date">
+
+
+<input id="hora" type="time">
+
+
+<button onclick="salvarPartida()">
+
+Adicionar Série
+
+</button>
+
+
+
+<h3>Partidas Agendadas</h3>
+
+
+<div id="lista"></div>
 
 
 </div>
 
 
-
 <script>
-
-
+  // Lista de equipes cadastradas
 let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
 
 let partidas = JSON.parse(localStorage.getItem("partidas")) || [];
 
+let editando = -1;
 
 
-let tabela = [];
+// Carregar equipes nos campos de seleção
+function carregarEquipes(){
 
+let select1 = document.getElementById("time1");
+let select2 = document.getElementById("time2");
+
+
+select1.innerHTML = "";
+select2.innerHTML = "";
 
 
 equipes.forEach(e=>{
 
+select1.innerHTML += `
+<option value="${e.nome}">
+${e.nome}
+</option>
+`;
 
-tabela.push({
-
-nome:e.nome,
-
-jogos:0,
-
-vitorias:0,
-
-derrotas:0,
-
-mapasV:0,
-
-mapasD:0,
-
-roundsF:0,
-
-roundsS:0,
-
-saldo:0,
-
-pontos:0
+select2.innerHTML += `
+<option value="${e.nome}">
+${e.nome}
+</option>
+`;
 
 });
 
 
-});
-// Ler partidas finalizadas
-
-partidas.forEach(p=>{
+}
 
 
-if(p.finalizada){
+function salvarPartida(){
 
 
-let time1 = tabela.find(t=>t.nome === p.time1);
+let partida = {
 
-let time2 = tabela.find(t=>t.nome === p.time2);
+time1:document.getElementById("time1").value,
 
+time2:document.getElementById("time2").value,
 
+data:document.getElementById("data").value,
 
-if(time1 && time2){
-
-
-time1.jogos++;
-
-time2.jogos++;
+hora:document.getElementById("hora").value,
 
 
+// Dados da MD3
+mapas1:0,
+mapas2:0,
 
-// Mapas
-
-time1.mapasV += Number(p.mapas1);
-time1.mapasD += Number(p.mapas2);
+rounds1:0,
+rounds2:0,
 
 
-time2.mapasV += Number(p.mapas2);
-time2.mapasD += Number(p.mapas1);
+finalizada:false
+
+};
 
 
 
-// Rounds
+if(editando === -1){
 
-time1.roundsF += Number(p.rounds1);
-time1.roundsS += Number(p.rounds2);
+partidas.push(partida);
 
+}else{
 
-time2.roundsF += Number(p.rounds2);
-time2.roundsS += Number(p.rounds1);
+partidas[editando] = partida;
 
-
-
-// Saldo de rounds
-
-time1.saldo += Number(p.rounds1) - Number(p.rounds2);
-
-time2.saldo += Number(p.rounds2) - Number(p.rounds1);
-
-
-
-// Resultado da série MD3
-
-if(Number(p.mapas1) > Number(p.mapas2)){
-
-
-time1.vitorias++;
-
-time2.derrotas++;
-
-time1.pontos += 3;
-
+editando = -1;
 
 }
 
-else{
 
 
-time2.vitorias++;
+localStorage.setItem(
+"partidas",
+JSON.stringify(partidas)
+);
 
-time1.derrotas++;
 
-time2.pontos += 3;
+
+mostrarPartidas();
 
 
 }
 
 
 
+function editarPartida(index){
+
+
+let p = partidas[index];
+
+
+document.getElementById("time1").value = p.time1;
+
+document.getElementById("time2").value = p.time2;
+
+document.getElementById("data").value = p.data;
+
+document.getElementById("hora").value = p.hora;
+
+
+editando = index;
+
+
+}
+
+
+
+
+function excluirPartida(index){
+
+
+let confirmar = confirm(
+"Deseja excluir esta partida?"
+);
+
+
+if(confirmar){
+
+partidas.splice(index,1);
+
+
+localStorage.setItem(
+"partidas",
+JSON.stringify(partidas)
+);
+
+
+mostrarPartidas();
+
 }
 
 
 }
 
 
-});
+
+function mostrarPartidas(){
+
+
+let lista=document.getElementById("lista");
+
+
+lista.innerHTML="";
 
 
 
+partidas.forEach((p,index)=>{
 
 
-// Ordenação
+lista.innerHTML += `
 
-tabela.sort((a,b)=>{
-
-
-if(b.pontos !== a.pontos){
-
-return b.pontos - a.pontos;
-
-}
+<div class="partida">
 
 
-if(b.vitorias !== a.vitorias){
+<strong>
+${p.time1} 🆚 ${p.time2}
+</strong>
 
-return b.vitorias - a.vitorias;
+<br>
 
-}
+📅 ${p.data}
 
+<br>
 
-return b.saldo - a.saldo;
-
-
-});
-
-
+⏰ ${p.hora}
 
 
+${p.finalizada ? `
 
-// Mostrar tabela
+<div class="resultado">
 
-let corpo = document.getElementById("tabela");
+🏆 Série finalizada
 
+<br>
 
+${p.time1} ${p.mapas1} x ${p.mapas2} ${p.time2}
 
-tabela.forEach((e,index)=>{
+<br>
 
+🎯 Rounds:
+${p.rounds1} x ${p.rounds2}
 
-corpo.innerHTML += `
-
-<tr class="${index===0 ? "lider":""}">
-
-
-<td>${index+1}º</td>
-
-<td>${e.nome}</td>
-
-<td>${e.jogos}</td>
-
-<td>${e.vitorias}</td>
-
-<td>${e.derrotas}</td>
-
-<td>${e.mapasV}-${e.mapasD}</td>
-
-<td>${e.roundsF}-${e.roundsS}</td>
-
-<td>${e.saldo}</td>
-
-<td>${e.pontos}</td>
+</div>
 
 
-</tr>
+`:""}
+
+
+
+${!p.finalizada ? `
+
+<button onclick="editarPartida(${index})" class="editar">
+
+Editar
+
+</button>
+
+
+<button onclick="finalizarPartida(${index})">
+
+Finalizar MD3
+
+</button>
+
+
+`:""}
+
+
+
+<button onclick="excluirPartida(${index})" class="excluir">
+
+Excluir
+
+</button>
+
+
+</div>
 
 `;
 
 });
 
 
+}
+
+
+
+// iniciar página
+
+carregarEquipes();
+
+mostrarPartidas();
+function finalizarPartida(index){
+
+
+let p = partidas[index];
+
+
+// Mapas
+let mapas1 = prompt(
+"Quantos mapas "+p.time1+" ganhou? (0,1 ou 2)"
+);
+
+let mapas2 = prompt(
+"Quantos mapas "+p.time2+" ganhou? (0,1 ou 2)"
+);
+
+
+// Rounds
+let rounds1 = prompt(
+"Quantos rounds "+p.time1+" fez?"
+);
+
+let rounds2 = prompt(
+"Quantos rounds "+p.time2+" fez?"
+);
+
+
+
+if(mapas1 === null || mapas2 === null || rounds1 === null || rounds2 === null){
+
+return;
+
+}
+
+
+
+mapas1 = Number(mapas1);
+mapas2 = Number(mapas2);
+
+rounds1 = Number(rounds1);
+rounds2 = Number(rounds2);
+
+
+
+p.mapas1 = mapas1;
+
+p.mapas2 = mapas2;
+
+p.rounds1 = rounds1;
+
+p.rounds2 = rounds2;
+
+
+p.finalizada = true;
+
+
+
+if(mapas1 > mapas2){
+
+p.vencedor = p.time1;
+
+}else{
+
+p.vencedor = p.time2;
+
+}
+
+
+
+localStorage.setItem(
+"partidas",
+JSON.stringify(partidas)
+);
+
+
+
+mostrarPartidas();
+
+
+
+}
+mostrarPartidas();
 
 </script>
-
 
 </body>
 

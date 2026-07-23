@@ -11,7 +11,7 @@
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#f1f1f1;
 padding:20px;
 }
@@ -20,7 +20,7 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:800px;
+max-width:1000px;
 margin:auto;
 }
 
@@ -46,6 +46,7 @@ background:#fff3cd;
 font-weight:bold;
 }
 
+
 </style>
 
 </head>
@@ -55,6 +56,7 @@ font-weight:bold;
 
 
 <div class="container">
+
 
 <h2>🏆 Classificação VCC</h2>
 
@@ -66,11 +68,21 @@ font-weight:bold;
 <tr>
 
 <th>Pos</th>
+
 <th>Equipe</th>
+
 <th>Jogos</th>
+
 <th>Vitórias</th>
+
 <th>Derrotas</th>
+
+<th>Mapas</th>
+
+<th>Rounds</th>
+
 <th>Saldo</th>
+
 <th>Pontos</th>
 
 </tr>
@@ -103,6 +115,7 @@ let tabela = [];
 
 equipes.forEach(e=>{
 
+
 tabela.push({
 
 nome:e.nome,
@@ -113,17 +126,23 @@ vitorias:0,
 
 derrotas:0,
 
+mapasV:0,
+
+mapasD:0,
+
+roundsF:0,
+
+roundsS:0,
+
 saldo:0,
 
 pontos:0
 
 });
 
+
 });
-
-
-
-
+// Ler partidas finalizadas
 
 partidas.forEach(p=>{
 
@@ -146,19 +165,39 @@ time2.jogos++;
 
 
 
-let placar1 = Number(p.placar1);
+// Mapas
 
-let placar2 = Number(p.placar2);
-
-
-
-time1.saldo += placar1 - placar2;
-
-time2.saldo += placar2 - placar1;
+time1.mapasV += Number(p.mapas1);
+time1.mapasD += Number(p.mapas2);
 
 
+time2.mapasV += Number(p.mapas2);
+time2.mapasD += Number(p.mapas1);
 
-if(placar1 > placar2){
+
+
+// Rounds
+
+time1.roundsF += Number(p.rounds1);
+time1.roundsS += Number(p.rounds2);
+
+
+time2.roundsF += Number(p.rounds2);
+time2.roundsS += Number(p.rounds1);
+
+
+
+// Saldo de rounds
+
+time1.saldo += Number(p.rounds1) - Number(p.rounds2);
+
+time2.saldo += Number(p.rounds2) - Number(p.rounds1);
+
+
+
+// Resultado da série MD3
+
+if(Number(p.mapas1) > Number(p.mapas2)){
 
 
 time1.vitorias++;
@@ -170,7 +209,7 @@ time1.pontos += 3;
 
 }
 
-else if(placar2 > placar1){
+else{
 
 
 time2.vitorias++;
@@ -182,15 +221,6 @@ time2.pontos += 3;
 
 }
 
-else{
-
-
-time1.pontos++;
-
-time2.pontos++;
-
-
-}
 
 
 }
@@ -204,7 +234,8 @@ time2.pontos++;
 
 
 
-// Ordenação do campeonato
+
+// Ordenação
 
 tabela.sort((a,b)=>{
 
@@ -231,7 +262,10 @@ return b.saldo - a.saldo;
 
 
 
-let corpo=document.getElementById("tabela");
+
+// Mostrar tabela
+
+let corpo = document.getElementById("tabela");
 
 
 
@@ -241,6 +275,7 @@ tabela.forEach((e,index)=>{
 corpo.innerHTML += `
 
 <tr class="${index===0 ? "lider":""}">
+
 
 <td>${index+1}º</td>
 
@@ -252,15 +287,21 @@ corpo.innerHTML += `
 
 <td>${e.derrotas}</td>
 
+<td>${e.mapasV}-${e.mapasD}</td>
+
+<td>${e.roundsF}-${e.roundsS}</td>
+
 <td>${e.saldo}</td>
 
 <td>${e.pontos}</td>
+
 
 </tr>
 
 `;
 
 });
+
 
 
 </script>
