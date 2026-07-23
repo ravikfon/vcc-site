@@ -263,6 +263,14 @@ return b.saldo - a.saldo;
 
 
 
+// Salvar classificação para os playoffs
+
+localStorage.setItem(
+"classificacaoFinal",
+JSON.stringify(tabela)
+);
+
+
 // Mostrar tabela
 
 let corpo = document.getElementById("tabela");
