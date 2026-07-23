@@ -11,7 +11,7 @@
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#f1f1f1;
 padding:20px;
 }
@@ -20,30 +20,60 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:700px;
+max-width:800px;
 margin:auto;
 }
 
+h2{
+text-align:center;
+}
+
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#0066ff;
+color:white;
+border:none;
+border-radius:5px;
+font-size:16px;
+}
+
+
 .jogo{
+
 background:#eee;
 padding:15px;
 margin-top:15px;
 border-radius:10px;
+text-align:center;
+
 }
 
-button{
-background:#0066ff;
-color:white;
-border:none;
-padding:10px;
-border-radius:5px;
-width:100%;
-margin-top:10px;
+
+.vencedor{
+
+background:#d4ffd4;
+
 }
+
 
 .final{
+
 background:#fff3cd;
+
 }
+
+
+.campeao{
+
+background:#ffd700;
+font-weight:bold;
+font-size:20px;
+
+}
+
 
 </style>
 
@@ -59,8 +89,10 @@ background:#fff3cd;
 <h2>🏆 Playoffs VCC</h2>
 
 
-<button onclick="gerarChave()">
+<button onclick="gerarPlayoffs()">
+
 Gerar Chave dos Playoffs
+
 </button>
 
 
@@ -69,42 +101,20 @@ Gerar Chave dos Playoffs
 
 </div>
 
-
-
 <script>
-
 
 let playoffs = JSON.parse(localStorage.getItem("playoffs")) || {};
 
 
 
-function gerarChave(){
+function gerarPlayoffs(){
+
+let classificacao = JSON.parse(localStorage.getItem("classificacaoFinal")) || [];
 
 
-let equipes = JSON.parse(localStorage.getItem("equipes")) || [];
+if(classificacao.length < 6){
 
-
-
-let ranking = equipes.map(e=>{
-
-return {
-
-nome:e.nome,
-pontos:e.pontos || 0
-
-};
-
-});
-
-
-
-ranking.sort((a,b)=>b.pontos-a.pontos);
-
-
-
-if(ranking.length < 6){
-
-alert("Precisa ter 6 equipes cadastradas!");
+alert("É necessário ter 6 equipes classificadas!");
 
 return;
 
@@ -112,60 +122,72 @@ return;
 
 
 
-playoffs={
+playoffs = {
 
-primeiro:ranking[0].nome,
+primeiro: classificacao[0].nome,
 
-segundo:ranking[1].nome,
+segundo: classificacao[1].nome,
 
 
-jogoA:{
-time1:ranking[2].nome,
-time2:ranking[5].nome,
+playoff1:{
+
+time1: classificacao[2].nome,
+
+time2: classificacao[5].nome,
+
 vencedor:""
+
 },
 
 
-jogoB:{
-time1:ranking[3].nome,
-time2:ranking[4].nome,
+playoff2:{
+
+time1: classificacao[3].nome,
+
+time2: classificacao[4].nome,
+
 vencedor:""
+
 },
 
 
 semi:{
+
 time1:"",
+
 time2:"",
+
 vencedor:""
+
 },
 
 
 final:{
+
 time1:"",
+
 time2:"",
+
 formato:"MD5",
+
 vencedor:""
+
 }
 
 
 };
 
 
-
-localStorage.setItem(
-"playoffs",
-JSON.stringify(playoffs)
-);
-
+salvar();
 
 mostrar();
-
 
 }
 
 
 
-function escolherVencedor(tipo){
+
+function definirVencedor(fase){
 
 
 let vencedor = prompt("Digite o nome da equipe vencedora");
@@ -175,30 +197,71 @@ if(!vencedor)return;
 
 
 
-if(tipo==="A"){
+if(fase==="playoff1"){
 
-playoffs.jogoA.vencedor=vencedor;
+playoffs.playoff1.vencedor=vencedor;
+
+}
+
+
+if(fase==="playoff2"){
+
+playoffs.playoff2.vencedor=vencedor;
 
 }
 
 
-if(tipo==="B"){
+if(
+playoffs.playoff1.vencedor &&
+playoffs.playoff2.vencedor
+){
 
-playoffs.jogoB.vencedor=vencedor;
+playoffs.semi.time1=playoffs.segundo;
+
+playoffs.semi.time2=
+playoffs.playoff1.vencedor;
+
 
 }
 
+
+if(fase==="semi"){
+
+playoffs.semi.vencedor=vencedor;
+
+
+playoffs.final.time1=playoffs.primeiro;
+
+playoffs.final.time2=vencedor;
+
+}
+
+
+if(fase==="final"){
+
+playoffs.final.vencedor=vencedor;
+
+}
+
+
+salvar();
+
+mostrar();
+
+}
+
+
+
+
+function salvar(){
 
 localStorage.setItem(
 "playoffs",
 JSON.stringify(playoffs)
 );
 
-
-mostrar();
-
-
 }
+
 
 
 
@@ -211,24 +274,30 @@ let div=document.getElementById("chave");
 div.innerHTML="";
 
 
-
-if(!playoffs.jogoA)return;
-
+if(!playoffs.playoff1)return;
 
 
-div.innerHTML+=`
+
+div.innerHTML += `
+
 
 <div class="jogo">
 
 <h3>Playoff 1</h3>
 
-${playoffs.jogoA.time1} 🆚 ${playoffs.jogoA.time2}
+${playoffs.playoff1.time1}
 
-<button onclick="escolherVencedor('A')">
+🆚
+
+${playoffs.playoff1.time2}
+
+
+<button onclick="definirVencedor('playoff1')">
 
 Definir vencedor
 
 </button>
+
 
 </div>
 
@@ -238,43 +307,29 @@ Definir vencedor
 
 <h3>Playoff 2</h3>
 
-${playoffs.jogoB.time1} 🆚 ${playoffs.jogoB.time2}
+${playoffs.playoff2.time1}
+
+🆚
+
+${playoffs.playoff2.time2}
 
 
-<button onclick="escolherVencedor('B')">
+<button onclick="definirVencedor('playoff2')">
 
 Definir vencedor
 
 </button>
 
-</div>
-
-
-
-<div class="jogo final">
-
-<h3>🏆 Final VCC - MD5</h3>
-
-1º Lugar: ${playoffs.primeiro}
-
-<br>
-
-Aguardando semifinal
 
 </div>
 
-`;
-
-}
 
 
+<div class="jogo vencedor">
 
-mostrar();
-
-
-</script>
+<h3>Semifinal</h3>
 
 
-</body>
+${playoffs.semi.time1 || "Aguardando"}
 
-</html>
+🆚
