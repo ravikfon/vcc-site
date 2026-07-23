@@ -36,6 +36,11 @@ button{
 background:#0066ff;
 color:white;
 border:none;
+cursor:pointer;
+}
+
+.editar{
+background:#009900;
 }
 
 .excluir{
@@ -163,22 +168,29 @@ editando = index;
 
 
 
+
 function excluirEquipe(index){
+
 
 let confirmar = confirm("Deseja excluir esta equipe?");
 
+
 if(confirmar){
+
 
 equipes.splice(index,1);
 
+
 localStorage.setItem("equipes",JSON.stringify(equipes));
 
+
 mostrarEquipes();
+
 
 }
 
 
-
+}
 
 
 
