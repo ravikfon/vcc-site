@@ -140,6 +140,10 @@ Gerar Nova Chave
 
 </button>
 
+<button onclick="limparPlayoffs()">
+🗑️ Limpar Playoffs
+</button>
+
 
 <div id="chave"></div>
 
@@ -488,7 +492,21 @@ ${playoffs.final.vencedor}
 
 
 
+function limparPlayoffs(){
 
+if(confirm("Tem certeza que deseja apagar todos os playoffs?")){
+
+localStorage.removeItem("playoffs");
+
+playoffs = {};
+
+document.getElementById("chave").innerHTML = "";
+
+alert("Playoffs apagados com sucesso.");
+
+}
+
+}
 
 mostrar();
 
