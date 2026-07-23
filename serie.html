@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Série VCC</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+
+body{
+
+margin:0;
+padding:20px;
+background:#111827;
+color:white;
+
+}
+
+
+.container{
+
+max-width:800px;
+margin:auto;
+background:#1f2937;
+padding:25px;
+border-radius:15px;
+
+}
+
+
+h2{
+
+text-align:center;
+color:#60a5fa;
+
+}
+
+
+
+.card{
+
+background:#374151;
+padding:20px;
+margin-top:20px;
+border-radius:12px;
+text-align:center;
+
+}
+
+
+
+.time{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+
+
+.mapa{
+
+background:#4b5563;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
+
+}
+
+
+
+input{
+
+width:60px;
+padding:8px;
+text-align:center;
+font-size:18px;
+
+}
+
+
+
+button{
+
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:16px;
+
+}
+
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h2>🎮 Administração da Série</h2>
+
+
+<div id="serie"></div>
+
+
+</div>
+<script>
+
+
+let fase = localStorage.getItem("serieAtual");
+
+
+let playoffs =
+JSON.parse(localStorage.getItem("playoffs")) || {};
+
+
+
+let serie = document.getElementById("serie");
+
+
+
+let confronto = {};
+
+
+
+function carregarSerie(){
+
+
+if(!fase){
+
+serie.innerHTML = "Nenhuma série selecionada.";
+
+return;
+
+}
+
+
+
+confronto = playoffs[fase];
+
+
+
+if(!confronto){
+
+serie.innerHTML = "Confronto não encontrado.";
+
+return;
+
+}
+
+
+
+let formato = fase === "final" ? 5 : 3;
+
+
+
+serie.innerHTML = `
+
+
+<div class="card">
+
+
+<h3>
+
+${nomeFase(fase)}
+
+</h3>
+
+
+<div class="time">
+
+${confronto.time1}
+
+🆚
+
+${confronto.time2}
+
+</div>
+
+
+
+<p>
+
+Formato: MD${formato}
+
+</p>
+
+
+
+<div id="mapas"></div>
+
+
+
+<button onclick="salvarSerie()">
+
+💾 Salvar Série
+
+</button>
+
+
+</div>
+
+
+`;
+
+
+
+criarMapas(formato);
+
+
+}
+
+
+
+
+function nomeFase(f){
+
+
+let nomes={
+
+playoff1:"🔥 Playoff 1",
+
+playoff2:"🔥 Playoff 2",
+
+playoff3:"🔥 Playoff 3",
+
+semi:"⚔️ Semifinal",
+
+final:"🏆 Final"
+
+};
+
+
+
+return nomes[f];
+
+}
+
+
+
+
+
+function criarMapas(qtd){
+
+
+let div=document.getElementById("mapas");
+
+
+div.innerHTML="";
+
+
+
+for(let i=1;i<=qtd;i++){
+
+
+div.innerHTML += `
+
+
+<div class="mapa">
+
+
+Mapa ${i}
+
+
+<br><br>
+
+
+${confronto.time1}
+
+<input type="number" id="m${i}a" min="0">
+
+
+x
+
+
+<input type="number" id="m${i}b" min="0">
+
+
+${confronto.time2}
+
+
+</div>
+
+
+`;
+
+
+}
+
+
+}
+
+
+
+
+carregarSerie();
+
+
+</script>
+
+function salvarSerie(){
+
+
+let v1 = 0;
+let v2 = 0;
+
+
+let totalMapas = fase === "final" ? 5 : 3;
+
+
+for(let i=1;i<=totalMapas;i++){
+
+
+let a = Number(document.getElementById("m"+i+"a").value);
+
+let b = Number(document.getElementById("m"+i+"b").value);
+
+
+
+if(a > b){
+
+v1++;
+
+}
+
+
+else if(b > a){
+
+v2++;
+
+}
+
+
+}
+
+
+
+let vencedor = "";
+
+
+
+if(v1 > v2){
+
+vencedor = confronto.time1;
+
+}
+
+
+else if(v2 > v1){
+
+vencedor = confronto.time2;
+
+}
+
+
+else{
+
+alert("A série ainda está empatada!");
+
+return;
+
+}
+
+
+
+
+confronto.vencedor = vencedor;
+
+
+
+// Atualiza próxima fase
+
+if(fase==="playoff1"){
+
+playoffs.playoff1.vencedor = vencedor;
+
+
+}
+
+
+if(fase==="playoff2"){
+
+playoffs.playoff2.vencedor = vencedor;
+
+
+}
+
+
+
+if(
+playoffs.playoff1.vencedor &&
+playoffs.playoff2.vencedor
+){
+
+
+playoffs.playoff3.time1 =
+playoffs.playoff1.vencedor;
+
+
+playoffs.playoff3.time2 =
+playoffs.playoff2.vencedor;
+
+
+}
+
+
+
+if(fase==="playoff3"){
+
+
+playoffs.playoff3.vencedor = vencedor;
+
+playoffs.semi.time2 = vencedor;
+
+
+}
+
+
+
+if(fase==="semi"){
+
+
+playoffs.semi.vencedor = vencedor;
+
+playoffs.final.time2 = vencedor;
+
+
+}
+
+
+
+if(fase==="final"){
+
+
+playoffs.final.vencedor = vencedor;
+
+
+}
+
+
+
+localStorage.setItem(
+
+"playoffs",
+
+JSON.stringify(playoffs)
+
+);
+
+
+
+alert(
+"🏆 Série vencida por: " + vencedor
+);
+
+
+
+window.location="playoffs.html";
+
+
+}
+
+</script>
+
+
+</body>
+
+</html>
