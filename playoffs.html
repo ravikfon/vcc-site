@@ -306,3 +306,225 @@ mostrar();
 
 
 }
+function definirVencedor(fase){
+
+
+let vencedor = prompt("Digite o nome da equipe vencedora");
+
+
+if(!vencedor)return;
+
+
+
+if(fase==="playoff1"){
+
+playoffs.playoff1.vencedor=vencedor;
+
+}
+
+
+
+if(fase==="playoff2"){
+
+playoffs.playoff2.vencedor=vencedor;
+
+}
+
+
+
+if(
+playoffs.playoff1.vencedor &&
+playoffs.playoff2.vencedor
+){
+
+playoffs.semi.time2 = playoffs.playoff1.vencedor;
+
+playoffs.semi.time2 = 
+playoffs.playoff1.vencedor + " / " + playoffs.playoff2.vencedor;
+
+}
+
+
+
+if(fase==="semi"){
+
+playoffs.semi.vencedor=vencedor;
+
+playoffs.final.time2=vencedor;
+
+}
+
+
+
+if(fase==="final"){
+
+playoffs.final.vencedor=vencedor;
+
+}
+
+
+
+salvar();
+
+mostrar();
+
+
+}
+
+
+
+
+function salvar(){
+
+localStorage.setItem(
+"playoffs",
+JSON.stringify(playoffs)
+);
+
+}
+
+
+
+
+
+function mostrar(){
+
+
+let div=document.getElementById("chave");
+
+
+if(!div)return;
+
+
+div.innerHTML="";
+
+
+
+if(!playoffs.playoff1)return;
+
+
+
+div.innerHTML += `
+
+
+<div class="jogo">
+
+<h3>🔥 Playoff 1</h3>
+
+${playoffs.playoff1.time1}
+
+🆚
+
+${playoffs.playoff1.time2}
+
+
+<button onclick="definirVencedor('playoff1')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo">
+
+<h3>🔥 Playoff 2</h3>
+
+${playoffs.playoff2.time1}
+
+🆚
+
+${playoffs.playoff2.time2}
+
+
+<button onclick="definirVencedor('playoff2')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo vencedor">
+
+<h3>⚔️ Semifinal</h3>
+
+
+${playoffs.semi.time1}
+
+🆚
+
+${playoffs.semi.time2 || "Aguardando"}
+
+
+<button onclick="definirVencedor('semi')">
+
+Definir vencedor
+
+</button>
+
+</div>
+
+
+
+<div class="jogo final">
+
+<h3>🏆 FINAL MD5</h3>
+
+
+${playoffs.final.time1}
+
+🆚
+
+${playoffs.final.time2 || "Aguardando"}
+
+
+<button onclick="definirVencedor('final')">
+
+Definir campeão
+
+</button>
+
+</div>
+
+
+`;
+
+
+if(playoffs.final.vencedor){
+
+
+div.innerHTML += `
+
+<div class="jogo campeao">
+
+🏆 CAMPEÃO VCC
+
+<br>
+
+${playoffs.final.vencedor}
+
+</div>
+
+`;
+
+}
+
+
+}
+
+
+
+mostrar();
+
+
+</script>
+
+
+</body>
+
+</html>
