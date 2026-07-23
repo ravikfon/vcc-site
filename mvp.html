@@ -138,27 +138,32 @@ JSON.parse(localStorage.getItem("rankingMVP")) || [];
 
 function carregarJogadores(){
 
+let select = document.getElementById("jogador");
 
-let select =
-document.getElementById("jogador");
+select.innerHTML = "";
 
+if(jogadores.length === 0){
 
-select.innerHTML="";
+select.innerHTML = `
+<option>
+Nenhum jogador cadastrado
+</option>
+`;
+
+return;
+
+}
 
 
 jogadores.forEach(j=>{
 
-
 select.innerHTML += `
 
 <option value="${j.nome}">
-
-${j.nome}
-
+${j.nome} - ${j.nick}
 </option>
 
 `;
-
 
 });
 
@@ -272,15 +277,35 @@ rankingMVP.forEach((j,index)=>{
 
 lista.innerHTML += `
 
-
 <div class="jogador">
-
 
 <strong>
 
 ${index+1}º 🏆 ${j.nome}
 
-</strong
+</strong>
+
+<br>
+
+⭐ MVPs: ${j.mvp}
+
+<br>
+
+🎯 Abates: ${j.abates}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+carregarJogadores();
+
+mostrarRanking();
 
 </script>
 
